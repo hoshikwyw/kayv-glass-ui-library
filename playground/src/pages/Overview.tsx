@@ -35,17 +35,22 @@ export default function Overview() {
 
   return (
     <div className="max-w-4xl mx-auto px-8 py-12">
+
       {/* Hero */}
       <div className="mb-12">
         <div className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5
-          rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 mb-6">
+          rounded-full mb-6
+          bg-indigo-50 dark:bg-indigo-500/10
+          border border-indigo-200/60 dark:border-indigo-500/20
+          text-indigo-600 dark:text-indigo-300">
           <Zap className="h-3 w-3" />
           Production-grade component library
         </div>
-        <h1 className="text-4xl font-bold text-white tracking-tight mb-3">
+        <h1 className="text-4xl font-bold tracking-tight mb-3
+          text-slate-900 dark:text-white">
           kayv-glass-ui
         </h1>
-        <p className="text-slate-400 text-sm leading-relaxed max-w-lg">
+        <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-lg">
           A handcrafted React component library built on TypeScript and Tailwind CSS.
           Designed for glass-morphism aesthetics with a clean, typed API and zero runtime overhead.
         </p>
@@ -56,23 +61,34 @@ export default function Overview() {
         {features.map(({ icon: Icon, label, desc }) => (
           <div
             key={label}
-            className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-4"
+            className="rounded-2xl p-5 backdrop-blur-sm shadow-sm
+              border border-white/60 dark:border-white/10
+              bg-white/40 dark:bg-slate-800/40
+              shadow-slate-100/50 dark:shadow-black/10"
           >
-            <Icon className="h-4 w-4 text-indigo-400 mb-3" />
-            <p className="text-sm font-semibold text-slate-200">{label}</p>
-            <p className="text-xs text-slate-500 mt-1 leading-relaxed">{desc}</p>
+            <Icon className="h-4 w-4 text-indigo-500 mb-3" />
+            <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{label}</p>
+            <p className="text-xs leading-relaxed mt-1
+              text-slate-500 dark:text-slate-500">
+              {desc}
+            </p>
           </div>
         ))}
       </div>
 
       {/* Quick-start snippet */}
       <div className="mb-12">
-        <h2 className="text-sm font-semibold text-slate-300 mb-3">Quick start</h2>
-        <div className="rounded-xl border border-white/10 bg-slate-900/70 overflow-hidden">
-          <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/5 bg-white/5">
+        <h2 className="text-xs font-semibold tracking-wider uppercase mb-3
+          text-slate-400 dark:text-slate-500">
+          Quick start
+        </h2>
+        <div className="rounded-2xl overflow-hidden shadow-sm
+          border border-slate-700/40 bg-slate-900/95 backdrop-blur-sm">
+          <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-700/50">
             <span className="text-xs text-slate-500 font-mono">Usage</span>
           </div>
-          <pre className="px-5 py-4 text-sm font-mono leading-relaxed text-slate-300 overflow-x-auto">
+          <pre className="px-5 py-4 text-sm font-mono leading-relaxed
+            text-slate-300 overflow-x-auto">
             <code>{`import { Button } from 'kayv-glass-ui';
 
 function MyApp() {
@@ -86,32 +102,39 @@ function MyApp() {
         </div>
       </div>
 
-      {/* Component status grid */}
+      {/* Component status list */}
       <div>
-        <h2 className="text-sm font-semibold text-slate-300 mb-3">
+        <h2 className="text-xs font-semibold tracking-wider uppercase mb-3
+          text-slate-400 dark:text-slate-500">
           Components{' '}
-          <span className="font-normal text-slate-600">
+          <span className="font-normal normal-case
+            text-slate-400 dark:text-slate-500">
             ({readyCount}/{components.length} ready)
           </span>
         </h2>
-        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm
-          overflow-hidden divide-y divide-white/5">
+        <div className="rounded-2xl overflow-hidden backdrop-blur-sm shadow-sm
+          border border-white/60 dark:border-white/10
+          bg-white/40 dark:bg-slate-800/40
+          divide-y divide-slate-100/60 dark:divide-white/5">
           {components.map(c =>
             c.ready ? (
               <Link
                 key={c.path}
                 to={c.path}
-                className="flex items-center justify-between px-5 py-3.5
-                  hover:bg-white/5 transition-colors group"
+                className="flex items-center justify-between px-5 py-3.5 transition-colors group
+                  hover:bg-white/60 dark:hover:bg-white/5"
               >
                 <div className="flex items-center gap-3">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                  <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                  <span className="text-sm transition-colors
+                    text-slate-700 dark:text-slate-300
+                    group-hover:text-slate-900 dark:group-hover:text-white">
                     {c.label}
                   </span>
                 </div>
-                <ChevronRight className="h-3.5 w-3.5 text-slate-600
-                  group-hover:text-slate-400 transition-colors" />
+                <ChevronRight className="h-3.5 w-3.5 transition-colors
+                  text-slate-300 dark:text-slate-600
+                  group-hover:text-slate-500 dark:group-hover:text-slate-400" />
               </Link>
             ) : (
               <div
@@ -119,10 +142,15 @@ function MyApp() {
                 className="flex items-center justify-between px-5 py-3.5"
               >
                 <div className="flex items-center gap-3">
-                  <div className="h-4 w-4 rounded-full border border-slate-800 shrink-0" />
-                  <span className="text-sm text-slate-600">{c.label}</span>
+                  <div className="h-4 w-4 rounded-full shrink-0
+                    border border-slate-200 dark:border-slate-700" />
+                  <span className="text-sm
+                    text-slate-400 dark:text-slate-600">
+                    {c.label}
+                  </span>
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-700">
+                <span className="text-[10px] font-semibold uppercase tracking-widest
+                  text-slate-300 dark:text-slate-700">
                   Soon
                 </span>
               </div>

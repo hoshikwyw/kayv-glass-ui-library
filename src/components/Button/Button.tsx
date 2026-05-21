@@ -12,15 +12,15 @@ const Spinner = ({ className }: { className?: string }) => (
     aria-hidden="true"
   >
     <circle
-      className="opacity-25"
+      className="opacity-20"
       cx="12"
       cy="12"
       r="10"
       stroke="currentColor"
-      strokeWidth="4"
+      strokeWidth="3"
     />
     <path
-      className="opacity-75"
+      className="opacity-80"
       fill="currentColor"
       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
     />
@@ -53,14 +53,19 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-busy={isLoading}
         {...props}
       >
-        {isLoading ? (
-          <>
+        {/* Absolute spinner — preserves button dimensions when isLoading */}
+        {isLoading && (
+          <span
+            className="absolute inset-0 flex items-center justify-center"
+            aria-hidden
+          >
             <Spinner className={spinnerSizeStyles[size]} />
-            <span>Loading…</span>
-          </>
-        ) : (
-          children
+          </span>
         )}
+        {/* Children hidden (not removed) so button width never jumps */}
+        <span className={isLoading ? 'opacity-0' : undefined}>
+          {children}
+        </span>
       </button>
     );
   }

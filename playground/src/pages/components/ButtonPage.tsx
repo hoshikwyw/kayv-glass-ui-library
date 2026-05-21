@@ -6,14 +6,14 @@ import { Button } from '../../../../src';
 
 type Tab = 'preview' | 'code';
 
-// ── Props API data ─────────────────────────────────────────────────────────────
+// ── Props API ──────────────────────────────────────────────────────────────────
 
 const propsData = [
   {
     name: 'variant',
     type: "'primary' | 'secondary' | 'ghost'",
     defaultVal: "'primary'",
-    description: 'Controls the visual style of the button.',
+    description: 'Controls the visual glass style of the button.',
   },
   {
     name: 'size',
@@ -25,13 +25,13 @@ const propsData = [
     name: 'isLoading',
     type: 'boolean',
     defaultVal: 'false',
-    description: 'Replaces content with a spinner and sets aria-busy on the element.',
+    description: 'Overlays a centered spinner and sets aria-busy — button dimensions stay stable.',
   },
   {
     name: 'disabled',
     type: 'boolean',
     defaultVal: 'false',
-    description: 'Native disabled — prevents interaction and reduces opacity to 50%.',
+    description: 'Native disabled — prevents interaction and reduces opacity to 40%.',
   },
   {
     name: 'className',
@@ -47,7 +47,7 @@ const propsData = [
   },
 ];
 
-// ── Code examples ──────────────────────────────────────────────────────────────
+// ── Code snippets ──────────────────────────────────────────────────────────────
 
 const snippets: Record<string, string> = {
   Variants: `import { Button } from 'kayv-glass-ui';
@@ -60,14 +60,14 @@ const snippets: Record<string, string> = {
 <Button size="md">Medium</Button>
 <Button size="lg">Large</Button>`,
 
-  'Loading & Disabled': `{/* isLoading disables the button and injects a spinner */}
-<Button isLoading variant="primary" />
+  'Loading & Disabled': `{/* Spinner overlays content — width never jumps */}
+<Button isLoading variant="primary">Submit</Button>
 <Button isLoading variant="secondary" />
 
-{/* disabled forwards the native HTML attribute */}
+{/* Forwards native disabled attribute */}
 <Button disabled variant="primary">Disabled</Button>`,
 
-  'className Override': `{/* tailwind-merge resolves conflicting classes safely */}
+  'className Override': `{/* tailwind-merge resolves conflicts — your classes always win */}
 <Button className="rounded-full bg-violet-600 hover:bg-violet-700">
   Pill Violet
 </Button>
@@ -85,13 +85,21 @@ const snippets: Record<string, string> = {
 
 function PreviewCard({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden">
-      <div className="px-5 py-3 border-b border-white/5 bg-slate-800/30">
-        <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+    <div className="rounded-2xl overflow-hidden
+      border border-white/60 dark:border-white/10
+      bg-white/40 dark:bg-slate-800/40
+      backdrop-blur-sm shadow-sm shadow-slate-100/50 dark:shadow-black/10">
+      <div className="px-5 py-3.5
+        border-b border-slate-100/50 dark:border-white/5
+        bg-white/30 dark:bg-slate-700/20">
+        <span className="text-xs font-semibold tracking-wider uppercase
+          text-slate-400 dark:text-slate-500">
           {label}
         </span>
       </div>
-      <div className="px-5 py-8 flex flex-wrap items-center gap-3">{children}</div>
+      <div className="px-6 py-8 flex flex-wrap items-center gap-3">
+        {children}
+      </div>
     </div>
   );
 }
@@ -107,26 +115,39 @@ function CodeBlock({ code }: { code: string }) {
   };
 
   return (
-    <div className="rounded-xl border border-white/10 bg-slate-900/80 overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/5">
-        <span className="text-xs text-slate-600 font-mono">tsx</span>
+    <div className="rounded-2xl overflow-hidden
+      border border-slate-700/40 bg-slate-900/95 backdrop-blur-sm shadow-sm">
+      <div className="flex items-center justify-between px-4 py-2.5
+        border-b border-slate-700/50">
+        <span className="text-xs text-slate-500 font-mono">tsx</span>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 text-xs text-slate-500
-            hover:text-slate-300 transition-colors"
+          className="flex items-center gap-1.5 text-xs
+            text-slate-500 hover:text-slate-300 transition-colors"
         >
-          {copied ? (
-            <Check className="h-3.5 w-3.5 text-emerald-400" />
-          ) : (
-            <Copy className="h-3.5 w-3.5" />
-          )}
+          {copied
+            ? <Check className="h-3.5 w-3.5 text-emerald-400" />
+            : <Copy className="h-3.5 w-3.5" />}
           {copied ? 'Copied!' : 'Copy'}
         </button>
       </div>
-      <pre className="px-5 py-4 text-sm font-mono leading-relaxed text-slate-300 overflow-x-auto">
+      <pre className="px-5 py-4 text-sm font-mono leading-relaxed
+        text-slate-300 overflow-x-auto">
         <code>{code}</code>
       </pre>
     </div>
+  );
+}
+
+// ── Inline code chip ───────────────────────────────────────────────────────────
+
+function Chip({ children }: { children: string }) {
+  return (
+    <code className="text-indigo-600 dark:text-indigo-300 text-xs font-mono
+      bg-indigo-50 dark:bg-indigo-500/10
+      px-1.5 py-0.5 rounded-md border border-indigo-100 dark:border-indigo-500/20">
+      {children}
+    </code>
   );
 }
 
@@ -139,40 +160,46 @@ export default function ButtonPage() {
     <div className="max-w-4xl mx-auto px-8 py-10">
 
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1.5 text-xs text-slate-600 mb-6">
-        <Link to="/overview" className="hover:text-slate-400 transition-colors">
+      <nav className="flex items-center gap-1.5 text-xs mb-6
+        text-slate-400 dark:text-slate-600">
+        <Link
+          to="/overview"
+          className="hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
+        >
           Components
         </Link>
         <ChevronRight className="h-3 w-3" />
-        <span className="text-slate-300">Button</span>
+        <span className="text-slate-700 dark:text-slate-300">Button</span>
       </nav>
 
       {/* Title + description */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white tracking-tight mb-2">Button</h1>
-        <p className="text-slate-400 text-sm leading-relaxed max-w-xl">
+        <h1 className="text-3xl font-bold tracking-tight mb-2
+          text-slate-900 dark:text-white">
+          Button
+        </h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-xl">
           A fully accessible, ref-forwarding button built with{' '}
-          <code className="text-indigo-300 text-xs font-mono">React.forwardRef</code>.
-          Supports three semantic variants, three sizes, a managed loading state, and
-          accepts all native HTML button attributes. Incoming{' '}
-          <code className="text-indigo-300 text-xs font-mono">className</code> values
-          are safely merged with{' '}
-          <code className="text-indigo-300 text-xs font-mono">tailwind-merge</code>{' '}
-          so overrides always win without class conflicts.
+          <Chip>React.forwardRef</Chip>. Supports three glass variants, three sizes,
+          a stable loading state, and accepts all native HTML button attributes.
+          Incoming <Chip>className</Chip> values are safely merged with{' '}
+          <Chip>tailwind-merge</Chip> so overrides always win without class conflicts.
         </p>
       </div>
 
       {/* Tab switcher */}
-      <div className="flex items-center gap-1 p-1 rounded-lg bg-white/5 border
-        border-white/10 w-fit mb-6">
+      <div className="flex items-center gap-1 p-1 rounded-xl w-fit mb-6
+        bg-slate-100/60 dark:bg-slate-800/60
+        border border-slate-200/40 dark:border-white/5
+        backdrop-blur-sm">
         {(['preview', 'code'] as const).map(t => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all capitalize ${
+            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all capitalize ${
               tab === t
-                ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
-                : 'text-slate-500 hover:text-slate-300'
+                ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-sm shadow-slate-200/50 dark:shadow-black/30'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
             }`}
           >
             {t}
@@ -207,7 +234,7 @@ export default function ButtonPage() {
 
           <PreviewCard label="States — Loading">
             <Button isLoading variant="primary" size="sm" />
-            <Button isLoading variant="primary" />
+            <Button isLoading variant="primary">Submit</Button>
             <Button isLoading variant="secondary" />
             <Button isLoading variant="ghost" />
           </PreviewCard>
@@ -219,19 +246,21 @@ export default function ButtonPage() {
           </PreviewCard>
 
           <PreviewCard label="className Override">
-            <Button className="rounded-full bg-violet-600 hover:bg-violet-700 focus-visible:ring-violet-500">
+            <Button className="rounded-full bg-violet-500 hover:bg-violet-600
+              border-violet-400/50 text-white focus-visible:ring-violet-400">
               Pill Violet
             </Button>
             <Button
               variant="primary"
-              className="bg-gradient-to-r from-indigo-500 to-violet-600
-                hover:from-indigo-600 hover:to-violet-700 shadow-lg shadow-indigo-500/20"
+              className="bg-gradient-to-r from-indigo-500 to-violet-600 border-0
+                hover:from-indigo-600 hover:to-violet-700 text-white
+                shadow-lg shadow-indigo-500/25"
             >
               Gradient
             </Button>
             <Button
               variant="ghost"
-              className="text-rose-400 hover:bg-rose-500/10 hover:text-rose-300"
+              className="text-rose-500 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10"
             >
               Danger Ghost
             </Button>
@@ -244,8 +273,8 @@ export default function ButtonPage() {
         <div className="flex flex-col gap-6 mb-12">
           {Object.entries(snippets).map(([label, code]) => (
             <div key={label}>
-              <p className="text-xs font-semibold uppercase tracking-widest
-                text-slate-600 mb-2">
+              <p className="text-xs font-semibold uppercase tracking-wider
+                text-slate-400 dark:text-slate-600 mb-2">
                 {label}
               </p>
               <CodeBlock code={code} />
@@ -254,37 +283,56 @@ export default function ButtonPage() {
         </div>
       )}
 
-      {/* ── PROPS TABLE (always visible) ─────────────────── */}
+      {/* ── PROPS TABLE ─────────────────────────────────── */}
       <div>
-        <h2 className="text-sm font-semibold text-slate-300 mb-3">Props API</h2>
-        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden">
+        <h2 className="text-xs font-semibold tracking-wider uppercase mb-3
+          text-slate-400 dark:text-slate-500">
+          Props API
+        </h2>
+        <div className="rounded-2xl overflow-hidden
+          border border-white/60 dark:border-white/10
+          bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm shadow-sm">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10 bg-slate-800/40">
+              <tr className="border-b border-slate-100/60 dark:border-white/5
+                bg-slate-50/60 dark:bg-slate-700/30">
                 {['Prop', 'Type', 'Default', 'Description'].map(h => (
                   <th
                     key={h}
                     className="text-left px-5 py-3 text-[10px] font-semibold
-                      uppercase tracking-widest text-slate-500"
+                      uppercase tracking-widest text-slate-400 dark:text-slate-500"
                   >
                     {h}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-slate-100/60 dark:divide-white/5">
               {propsData.map(p => (
-                <tr key={p.name} className="hover:bg-white/5 transition-colors">
+                <tr
+                  key={p.name}
+                  className="hover:bg-white/40 dark:hover:bg-white/5 transition-colors"
+                >
                   <td className="px-5 py-3.5 whitespace-nowrap">
-                    <code className="text-indigo-300 text-xs font-mono">{p.name}</code>
+                    <code className="text-indigo-600 dark:text-indigo-400
+                      text-xs font-mono">
+                      {p.name}
+                    </code>
                   </td>
                   <td className="px-5 py-3.5">
-                    <code className="text-amber-300/80 text-xs font-mono">{p.type}</code>
+                    <code className="text-blue-600 dark:text-amber-300/80
+                      text-xs font-mono">
+                      {p.type}
+                    </code>
                   </td>
                   <td className="px-5 py-3.5 whitespace-nowrap">
-                    <code className="text-slate-400 text-xs font-mono">{p.defaultVal}</code>
+                    <code className="text-slate-500 dark:text-slate-400
+                      text-xs font-mono">
+                      {p.defaultVal}
+                    </code>
                   </td>
-                  <td className="px-5 py-3.5 text-slate-400 text-xs leading-relaxed">
+                  <td className="px-5 py-3.5 text-xs leading-relaxed
+                    text-slate-500 dark:text-slate-400">
                     {p.description}
                   </td>
                 </tr>
