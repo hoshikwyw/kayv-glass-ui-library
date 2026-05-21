@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: rgb(2 6 23); /* slate-950 */
+    /* Ambient radial glows — indigo left, sky top-right, violet bottom */
+    background-image:
+      radial-gradient(ellipse 70% 55% at 8% 65%, rgb(99 102 241 / 0.14) 0%, transparent 100%),
+      radial-gradient(ellipse 55% 45% at 90% 8%, rgb(14 165 233 / 0.11) 0%, transparent 100%),
+      radial-gradient(ellipse 40% 35% at 55% 95%, rgb(168 85 247 / 0.08) 0%, transparent 100%);
+    background-attachment: fixed;
+  }
+}
+
+/* Slim dark scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgb(51 65 85); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: rgb(71 85 105); }
