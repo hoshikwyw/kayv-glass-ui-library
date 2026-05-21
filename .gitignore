@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.tsup/
+*.tsbuildinfo
+playground/node_modules/
+playground/dist/
+.DS_Store
