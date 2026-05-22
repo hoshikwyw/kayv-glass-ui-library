@@ -32,6 +32,8 @@ export const weekDayBase =
   'flex items-center justify-center h-8 ' +
   'text-[11px] font-medium text-slate-400 dark:text-slate-500';
 
+export const weekDayWeekendStyles = 'text-rose-400 dark:text-rose-500';
+
 export const gridBase = 'grid grid-cols-7';
 
 export const cellBase = 'relative flex items-center justify-center h-8';
@@ -57,6 +59,19 @@ export const daySelectedStyles =
   'hover:bg-indigo-600 dark:hover:bg-indigo-400';
 
 export const dayDisabledStyles = 'opacity-30 cursor-not-allowed';
+
+export const dayHolidayStyles =
+  'text-rose-600 dark:text-rose-400 ' +
+  'hover:bg-rose-50 dark:hover:bg-rose-500/15 ' +
+  'hover:text-rose-700 dark:hover:text-rose-300';
+
+export const dayHolidayTodayStyles =
+  'font-semibold text-rose-600 dark:text-rose-400 ' +
+  'ring-1 ring-rose-300 dark:ring-rose-500/50';
+
+export const dayHolidaySelectedStyles =
+  'bg-rose-500 text-white font-medium ' +
+  'hover:bg-rose-600 dark:hover:bg-rose-400';
 
 // Month / year picker grid
 export const pickerGridBase = 'grid grid-cols-3 gap-1 min-h-[168px] content-start';

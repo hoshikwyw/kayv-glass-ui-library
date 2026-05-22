@@ -8,6 +8,9 @@ import {
   dayButtonBase,
   dayDefaultStyles,
   dayDisabledStyles,
+  dayHolidaySelectedStyles,
+  dayHolidayStyles,
+  dayHolidayTodayStyles,
   daySelectedStyles,
   dayTodayStyles,
   gridBase,
@@ -23,9 +26,10 @@ import {
   pickerItemTodayStyles,
   rangeStripBase,
   weekDayBase,
+  weekDayWeekendStyles,
   weekRowBase,
 } from './Calendar.styles';
-import type { CalendarProps, DateRange } from './Calendar.types';
+import type { CalendarEvent, CalendarEventColor, CalendarProps, DateRange, Holiday } from './Calendar.types';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -40,11 +44,21 @@ const YEARS_PER_PAGE = 12;
 
 type ViewMode = 'days' | 'months' | 'years';
 
+const EVENT_DOT: Record<CalendarEventColor, string> = {
+  indigo:  'bg-indigo-400 dark:bg-indigo-400',
+  emerald: 'bg-emerald-400 dark:bg-emerald-400',
+  amber:   'bg-amber-400 dark:bg-amber-400',
+  rose:    'bg-rose-400 dark:bg-rose-400',
+  violet:  'bg-violet-400 dark:bg-violet-400',
+  sky:     'bg-sky-400 dark:bg-sky-400',
+};
+
 // ── Date helpers ──────────────────────────────────────────────────────────────
 
 const sod = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 const sameDay = (a: Date, b: Date) => sod(a).getTime() === sod(b).getTime();
 const isToday = (d: Date) => sameDay(d, new Date());
+const isWeekend = (d: Date) => d.getDay() === 0 || d.getDay() === 6;
 
 function buildGrid(viewDate: Date, firstDayOfWeek: 0 | 1): (Date | null)[] {
   const y = viewDate.getFullYear();
@@ -96,6 +110,9 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
       minDate,
       maxDate,
       disabledDates = [],
+      holidays = [],
+      highlightWeekends = false,
+      events = [],
       firstDayOfWeek = 1,
       className,
     },
@@ -149,6 +166,16 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
         return disabledDates.some(d => sameDay(d, date));
       },
       [minDate, maxDate, disabledDates]
+    );
+
+    const getHoliday = useCallback(
+      (date: Date): Holiday | undefined => holidays.find(h => sameDay(h.date, date)),
+      [holidays]
+    );
+
+    const getEvents = useCallback(
+      (date: Date): CalendarEvent[] => events.filter(e => sameDay(e.date, date)),
+      [events]
     );
 
     const isDisabledMonth = useCallback(
@@ -372,7 +399,11 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
         {viewMode === 'days' && (
           <>
             <div className={weekRowBase} aria-hidden="true">
-              {dayNames.map(n => <div key={n} className={weekDayBase}>{n}</div>)}
+              {dayNames.map(n => (
+                <div key={n} className={cn(weekDayBase, highlightWeekends && (n === 'Sa' || n === 'Su') && weekDayWeekendStyles)}>
+                  {n}
+                </div>
+              ))}
             </div>
 
             <div role="grid" className={gridBase}>
@@ -384,6 +415,10 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
                     }
 
                     const disabled = isDisabledDay(date);
+                    const holiday = getHoliday(date);
+                    const dayEvents = getEvents(date);
+                    const isHolidayDay = Boolean(holiday);
+                    const isRedDay = isHolidayDay || (highlightWeekends && isWeekend(date));
                     const today = isToday(date);
                     const isSelected = !isRangeMode &&
                       Boolean(selectedSingle && sameDay(date, selectedSingle));
@@ -398,7 +433,21 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
                     const hasCompleteRange = Boolean(from && to);
                     const showRightHalf = isRangeStart && !isRangeEnd && hasCompleteRange;
                     const showLeftHalf  = isRangeEnd && !isRangeStart && hasCompleteRange;
-                    const showTodayRing = today && !isSelected && !isRangeSelected;
+                    const isActivated = isSelected || isRangeSelected;
+                    const showTodayRing = today && !isActivated;
+                    // Holiday dot only if no events (event dots take priority)
+                    const showHolidayDot = isHolidayDay && dayEvents.length === 0 && !isActivated && !disabled;
+                    const showEventDots = dayEvents.length > 0 && !disabled;
+
+                    const titleParts = [
+                      holiday?.label,
+                      ...dayEvents.map(e => e.label),
+                    ].filter(Boolean);
+
+                    const ariaLabel = [
+                      date.toLocaleDateString(undefined, { dateStyle: 'long' }),
+                      ...titleParts,
+                    ].filter(Boolean).join(', ');
 
                     return (
                       <div
@@ -420,17 +469,38 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
                           type="button"
                           onClick={() => handleDayClick(date)}
                           disabled={disabled}
-                          aria-label={date.toLocaleDateString(undefined, { dateStyle: 'long' })}
-                          aria-selected={isSelected || isRangeSelected}
+                          title={titleParts.length > 0 ? titleParts.join('\n') : undefined}
+                          aria-label={ariaLabel}
+                          aria-selected={isActivated}
                           className={cn(
                             dayButtonBase,
-                            !isSelected && !isRangeSelected && !disabled && dayDefaultStyles,
-                            showTodayRing && dayTodayStyles,
-                            (isSelected || isRangeSelected) && daySelectedStyles,
+                            !isActivated && !disabled && (isRedDay ? dayHolidayStyles : dayDefaultStyles),
+                            showTodayRing && (isRedDay ? dayHolidayTodayStyles : dayTodayStyles),
+                            isActivated && (isRedDay ? dayHolidaySelectedStyles : daySelectedStyles),
                             disabled && dayDisabledStyles,
                           )}
                         >
                           {date.getDate()}
+                          {showHolidayDot && (
+                            <span aria-hidden="true"
+                              className="absolute bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-rose-400 dark:bg-rose-500" />
+                          )}
+                          {showEventDots && (
+                            <span aria-hidden="true"
+                              className="absolute bottom-0.5 left-0 right-0 flex justify-center gap-px">
+                              {dayEvents.slice(0, 3).map((ev, i) => (
+                                <span
+                                  key={i}
+                                  className={cn(
+                                    'h-1 w-1 rounded-full',
+                                    isActivated
+                                      ? 'bg-white/80'
+                                      : EVENT_DOT[ev.color ?? 'indigo']
+                                  )}
+                                />
+                              ))}
+                            </span>
+                          )}
                         </button>
                       </div>
                     );

@@ -5,6 +5,19 @@ export interface DateRange {
   to: Date | null;
 }
 
+export interface Holiday {
+  date: Date;
+  label?: string;
+}
+
+export type CalendarEventColor = 'indigo' | 'emerald' | 'amber' | 'rose' | 'violet' | 'sky';
+
+export interface CalendarEvent {
+  date: Date;
+  label: string;
+  color?: CalendarEventColor;
+}
+
 export interface CalendarProps {
   mode?: CalendarMode;
   // single
@@ -19,6 +32,10 @@ export interface CalendarProps {
   minDate?: Date;
   maxDate?: Date;
   disabledDates?: Date[];
+  // holidays & events
+  holidays?: Holiday[];
+  highlightWeekends?: boolean;
+  events?: CalendarEvent[];
   // config
   firstDayOfWeek?: 0 | 1;
   className?: string;

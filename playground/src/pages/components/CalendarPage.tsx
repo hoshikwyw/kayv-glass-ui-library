@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Copy, Check } from 'lucide-react';
 import { Calendar } from '../../../../src';
-import type { DateRange } from '../../../../src';
+import type { CalendarEvent, DateRange, Holiday } from '../../../../src';
 
 type Tab = 'preview' | 'code';
 
@@ -77,6 +77,24 @@ const propsData = [
     description: '0 = Sunday start, 1 = Monday start. Controls the column order of the day grid.',
   },
   {
+    name: 'holidays',
+    type: 'Holiday[]',
+    defaultVal: '[]',
+    description: 'Dates marked as public holidays. Always rendered in rose/red with a dot indicator and an optional tooltip label.',
+  },
+  {
+    name: 'highlightWeekends',
+    type: 'boolean',
+    defaultVal: 'false',
+    description: 'When true, Saturday and Sunday are rendered in rose/red and their column headers are tinted. Holidays are always red regardless of this prop.',
+  },
+  {
+    name: 'events',
+    type: 'CalendarEvent[]',
+    defaultVal: '[]',
+    description: 'Events to mark on the calendar. Each event shows as a colored dot below the day number. Up to 3 dots are shown per day. Dots turn white when a day is selected.',
+  },
+  {
     name: 'className',
     type: 'string',
     defaultVal: '—',
@@ -137,6 +155,63 @@ const disabledDates = [
 
 {/* Sunday start */}
 <Calendar firstDayOfWeek={0} onChange={setDate} />`,
+
+  Events: `import { Calendar } from 'kayv-glass-ui';
+import type { CalendarEvent } from 'kayv-glass-ui';
+
+const events: CalendarEvent[] = [
+  { date: new Date(2025, 4, 5),  label: 'Team standup',      color: 'indigo' },
+  { date: new Date(2025, 4, 5),  label: 'Design review',     color: 'violet' },
+  { date: new Date(2025, 4, 12), label: 'Sprint planning',   color: 'emerald' },
+  { date: new Date(2025, 4, 18), label: 'Client call',       color: 'amber' },
+  { date: new Date(2025, 4, 20), label: 'Product demo',      color: 'sky' },
+  { date: new Date(2025, 4, 26), label: 'Release v2.0',      color: 'rose' },
+];
+
+{/* Dots appear below each day that has events.
+    Up to 3 dots shown when multiple events fall on the same day.
+    Hover a dot day to see event labels in the tooltip. */}
+<Calendar events={events} onChange={setDate} />
+
+{/* Combined with holidays and weekend highlighting */}
+<Calendar
+  events={events}
+  holidays={holidays}
+  highlightWeekends
+  onChange={setDate}
+/>`,
+
+  'Weekend Highlight': `{/* Default — weekends use the standard slate color */}
+<Calendar onChange={setDate} />
+
+{/* highlightWeekends — Saturday & Sunday rendered in rose/red */}
+<Calendar highlightWeekends onChange={setDate} />
+
+{/* Combined — highlighted weekends + public holidays */}
+<Calendar
+  highlightWeekends
+  holidays={holidays}
+  onChange={setDate}
+/>`,
+
+  Holidays: `import { Calendar } from 'kayv-glass-ui';
+import type { Holiday } from 'kayv-glass-ui';
+
+const holidays: Holiday[] = [
+  { date: new Date(2025, 0, 1),  label: "New Year's Day" },
+  { date: new Date(2025, 4, 26), label: 'Memorial Day' },
+  { date: new Date(2025, 6, 4),  label: 'Independence Day' },
+  { date: new Date(2025, 11, 25), label: 'Christmas Day' },
+];
+
+<Calendar holidays={holidays} onChange={setDate} />
+
+{/* Holiday dates render in rose/red with:
+    - rose text color
+    - rose ring when today
+    - rose background when selected
+    - small red dot indicator below the number
+    - tooltip via the optional label prop */}`,
 
   'Month / Year Picker': `{/* Click the month or year label in the header to
     open the month/year picker grid */}
@@ -248,6 +323,93 @@ function SundayStartDemo() {
     <div>
       <Calendar firstDayOfWeek={0} onChange={setDate} />
       <DateDisplay label="Selected" date={date} />
+    </div>
+  );
+}
+
+function EventsDemo() {
+  const [date, setDate] = useState<Date | null>(null);
+  const today = new Date();
+  const y = today.getFullYear();
+  const m = today.getMonth();
+  const events: CalendarEvent[] = [
+    { date: new Date(y, m, 3),  label: 'Team standup',    color: 'indigo' },
+    { date: new Date(y, m, 5),  label: 'Design review',   color: 'violet' },
+    { date: new Date(y, m, 5),  label: 'Sprint planning', color: 'emerald' },
+    { date: new Date(y, m, 10), label: 'Client call',     color: 'amber' },
+    { date: new Date(y, m, 14), label: 'Product demo',    color: 'sky' },
+    { date: new Date(y, m, 14), label: 'Team lunch',      color: 'emerald' },
+    { date: new Date(y, m, 14), label: 'Code review',     color: 'indigo' },
+    { date: new Date(y, m, 20), label: 'Release v2.0',    color: 'rose' },
+    { date: new Date(y, m, 24), label: 'Retrospective',   color: 'violet' },
+    { date: new Date(y, m, 28), label: 'Planning session', color: 'amber' },
+  ];
+  return (
+    <div className="flex flex-col gap-3">
+      <Calendar events={events} onChange={setDate} />
+      <DateDisplay label="Selected" date={date} />
+      <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-1">
+        {([ 'indigo', 'emerald', 'amber', 'rose', 'violet', 'sky'] as const).map(color => {
+          const colorMap: Record<string, string> = {
+            indigo:  'bg-indigo-400',
+            emerald: 'bg-emerald-400',
+            amber:   'bg-amber-400',
+            rose:    'bg-rose-400',
+            violet:  'bg-violet-400',
+            sky:     'bg-sky-400',
+          };
+          const eventsOfColor = events.filter(e => (e.color ?? 'indigo') === color);
+          if (eventsOfColor.length === 0) return null;
+          return eventsOfColor.map((ev, i) => (
+            <span key={`${color}-${i}`} className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+              <span className={`h-2 w-2 rounded-full ${colorMap[color]}`} />
+              {ev.label}
+            </span>
+          ));
+        })}
+      </div>
+    </div>
+  );
+}
+
+function WeekendDefaultDemo() {
+  const [date, setDate] = useState<Date | null>(null);
+  return (
+    <div>
+      <Calendar onChange={setDate} />
+      <DateDisplay label="Selected" date={date} />
+    </div>
+  );
+}
+
+function WeekendHighlightDemo() {
+  const [date, setDate] = useState<Date | null>(null);
+  return (
+    <div>
+      <Calendar highlightWeekends onChange={setDate} />
+      <DateDisplay label="Selected" date={date} />
+    </div>
+  );
+}
+
+function HolidaysDemo() {
+  const [date, setDate] = useState<Date | null>(null);
+  const today = new Date();
+  const y = today.getFullYear();
+  const m = today.getMonth();
+  const holidays: Holiday[] = [
+    { date: new Date(y, m, 1),  label: "New Year's Day" },
+    { date: new Date(y, m, 8),  label: 'National Day' },
+    { date: new Date(y, m, 15), label: 'Independence Day' },
+    { date: new Date(y, m, 25), label: 'Christmas Day' },
+  ];
+  return (
+    <div>
+      <Calendar highlightWeekends holidays={holidays} onChange={setDate} />
+      <DateDisplay label="Selected" date={date} />
+      <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+        Hover a red date to see its holiday label.
+      </p>
     </div>
   );
 }
@@ -393,6 +555,31 @@ export default function CalendarPage() {
 
           <PreviewCard label="Disabled Dates">
             <DisabledDatesDemo />
+          </PreviewCard>
+
+          <PreviewCard label="Events">
+            <EventsDemo />
+          </PreviewCard>
+
+          <PreviewCard label="Weekend Highlight">
+            <div className="flex flex-wrap gap-8">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
+                  Default (highlightWeekends=false)
+                </p>
+                <WeekendDefaultDemo />
+              </div>
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-rose-400 dark:text-rose-500 mb-3">
+                  highlightWeekends=true
+                </p>
+                <WeekendHighlightDemo />
+              </div>
+            </div>
+          </PreviewCard>
+
+          <PreviewCard label="Public Holidays + Weekend Highlight">
+            <HolidaysDemo />
           </PreviewCard>
 
           <PreviewCard label="Sunday Start — firstDayOfWeek=0">
