@@ -67,7 +67,7 @@ const components: {
     path: '/components/accordion',
     desc: 'Animated disclosure panels for collapsible content.',
     icon: AlignJustify,
-    ready: false,
+    ready: true,
   },
   {
     label: 'Alert',

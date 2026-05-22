@@ -15,7 +15,7 @@ const navigation: NavSection[] = [
     items: [
       { label: 'Badge', path: '/components/badge' },
       { label: 'Card', path: '/components/card' },
-      { label: 'Accordion', path: '/components/accordion', soon: true },
+      { label: 'Accordion', path: '/components/accordion' },
     ],
   },
   {
