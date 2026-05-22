@@ -88,7 +88,7 @@ const components: {
     path: '/components/select',
     desc: 'Dropdown selection with glass overlay and search.',
     icon: ChevronsUpDown,
-    ready: false,
+    ready: true,
   },
 ];
 

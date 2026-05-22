@@ -9,6 +9,7 @@ import CardPage from './pages/components/CardPage';
 import AccordionPage from './pages/components/AccordionPage';
 import AlertPage from './pages/components/AlertPage';
 import InputPage from './pages/components/InputPage';
+import SelectPage from './pages/components/SelectPage';
 import ComingSoon from './pages/ComingSoon';
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="components/accordion" element={<AccordionPage />} />
           <Route path="components/alert" element={<AlertPage />} />
           <Route path="components/input" element={<InputPage />} />
+          <Route path="components/select" element={<SelectPage />} />
           <Route path="components/:slug" element={<ComingSoon />} />
         </Route>
       </Routes>

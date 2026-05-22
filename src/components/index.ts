@@ -5,3 +5,4 @@ export * from './Card';
 export * from './Accordion';
 export * from './Alert';
 export * from './Input';
+export * from './Select';
