@@ -2,7 +2,7 @@
 
 A production-grade React component library built with TypeScript and Tailwind CSS. The design language centres on iOS-inspired glass morphism — translucent surfaces, `backdrop-blur`, and razor-thin borders — while keeping the component API clean, fully typed, and framework-agnostic.
 
-> **Status:** `v0.1.0` — 14 components shipped. Core infrastructure is stable.
+> **Status:** `v0.1.1` — 14 components shipped. Core infrastructure is stable.
 
 ---
 
