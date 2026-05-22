@@ -14,7 +14,7 @@ const navigation: NavSection[] = [
     category: 'Data Display',
     items: [
       { label: 'Badge', path: '/components/badge' },
-      { label: 'Card', path: '/components/card', soon: true },
+      { label: 'Card', path: '/components/card' },
       { label: 'Accordion', path: '/components/accordion', soon: true },
     ],
   },

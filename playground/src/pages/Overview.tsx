@@ -53,7 +53,7 @@ const components: {
     path: '/components/card',
     desc: 'Frosted glass content container with flexible layout slots.',
     icon: Layers,
-    ready: false,
+    ready: true,
   },
   {
     label: 'Input',

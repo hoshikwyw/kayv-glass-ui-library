@@ -5,6 +5,7 @@ import Overview from './pages/Overview';
 import ButtonPage from './pages/components/ButtonPage';
 import BadgePage from './pages/components/BadgePage';
 import ToastPage from './pages/components/ToastPage';
+import CardPage from './pages/components/CardPage';
 import ComingSoon from './pages/ComingSoon';
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="components/button" element={<ButtonPage />} />
           <Route path="components/badge" element={<BadgePage />} />
           <Route path="components/toast" element={<ToastPage />} />
+          <Route path="components/card" element={<CardPage />} />
           <Route path="components/:slug" element={<ComingSoon />} />
         </Route>
       </Routes>
