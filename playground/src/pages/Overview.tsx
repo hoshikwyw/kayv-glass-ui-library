@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import {
   Zap, Package, FileCode,
   MousePointerClick, Tag, Layers, TextCursor,
-  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, CalendarDays, Upload,
+  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, CalendarDays, Upload, MessageSquare,
   ArrowRight, CheckCircle2,
 } from 'lucide-react';
 import type { ElementType } from 'react';
@@ -123,6 +123,13 @@ const components: {
     path: '/components/file-input',
     desc: 'Drag-and-drop file upload with type, size, and count validation.',
     icon: Upload,
+    ready: true,
+  },
+  {
+    label: 'Tooltip',
+    path: '/components/tooltip',
+    desc: 'Portal-based tooltip with glass styling, directional caret, and hover or click trigger.',
+    icon: MessageSquare,
     ready: true,
   },
 ];

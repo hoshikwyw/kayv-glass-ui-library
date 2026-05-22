@@ -29,6 +29,7 @@ import {
   weekDayWeekendStyles,
   weekRowBase,
 } from './Calendar.styles';
+import { Tooltip } from '../Tooltip';
 import type { CalendarEvent, CalendarEventColor, CalendarProps, DateRange, Holiday } from './Calendar.types';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -94,6 +95,33 @@ const ChevDown = ({ className }: { className?: string }) => (
     <path d="M4 6l4 4 4-4" />
   </svg>
 );
+
+// ── Event tooltip content ─────────────────────────────────────────────────────
+
+function EventTooltipContent({
+  dayEvents,
+  holiday,
+}: {
+  dayEvents: CalendarEvent[];
+  holiday: Holiday | undefined;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5 min-w-[120px]">
+      {holiday?.label && (
+        <span className="flex items-center gap-2 text-rose-600 dark:text-rose-400 font-medium">
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-rose-400 dark:bg-rose-500" />
+          {holiday.label}
+        </span>
+      )}
+      {dayEvents.map((ev, i) => (
+        <span key={i} className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
+          <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full', EVENT_DOT[ev.color ?? 'indigo'])} />
+          {ev.label}
+        </span>
+      ))}
+    </div>
+  );
+}
 
 // ── Calendar ──────────────────────────────────────────────────────────────────
 
@@ -439,15 +467,50 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
                     const showHolidayDot = isHolidayDay && dayEvents.length === 0 && !isActivated && !disabled;
                     const showEventDots = dayEvents.length > 0 && !disabled;
 
-                    const titleParts = [
-                      holiday?.label,
-                      ...dayEvents.map(e => e.label),
-                    ].filter(Boolean);
+                    const hasTooltip = (dayEvents.length > 0 || Boolean(holiday?.label)) && !disabled;
 
                     const ariaLabel = [
                       date.toLocaleDateString(undefined, { dateStyle: 'long' }),
-                      ...titleParts,
+                      holiday?.label,
+                      ...dayEvents.map(e => e.label),
                     ].filter(Boolean).join(', ');
+
+                    const button = (
+                      <button
+                        type="button"
+                        onClick={() => handleDayClick(date)}
+                        disabled={disabled}
+                        aria-label={ariaLabel}
+                        aria-selected={isActivated}
+                        className={cn(
+                          dayButtonBase,
+                          !isActivated && !disabled && (isRedDay ? dayHolidayStyles : dayDefaultStyles),
+                          showTodayRing && (isRedDay ? dayHolidayTodayStyles : dayTodayStyles),
+                          isActivated && (isRedDay ? dayHolidaySelectedStyles : daySelectedStyles),
+                          disabled && dayDisabledStyles,
+                        )}
+                      >
+                        {date.getDate()}
+                        {showHolidayDot && (
+                          <span aria-hidden="true"
+                            className="absolute bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-rose-400 dark:bg-rose-500" />
+                        )}
+                        {showEventDots && (
+                          <span aria-hidden="true"
+                            className="absolute bottom-0.5 left-0 right-0 flex justify-center gap-px">
+                            {dayEvents.slice(0, 3).map((ev, i) => (
+                              <span
+                                key={i}
+                                className={cn(
+                                  'h-1 w-1 rounded-full',
+                                  isActivated ? 'bg-white/80' : EVENT_DOT[ev.color ?? 'indigo']
+                                )}
+                              />
+                            ))}
+                          </span>
+                        )}
+                      </button>
+                    );
 
                     return (
                       <div
@@ -465,43 +528,15 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
                           <span aria-hidden="true"
                             className={cn('absolute inset-y-0 left-0 right-1/2 pointer-events-none', rangeStripBase)} />
                         )}
-                        <button
-                          type="button"
-                          onClick={() => handleDayClick(date)}
-                          disabled={disabled}
-                          title={titleParts.length > 0 ? titleParts.join('\n') : undefined}
-                          aria-label={ariaLabel}
-                          aria-selected={isActivated}
-                          className={cn(
-                            dayButtonBase,
-                            !isActivated && !disabled && (isRedDay ? dayHolidayStyles : dayDefaultStyles),
-                            showTodayRing && (isRedDay ? dayHolidayTodayStyles : dayTodayStyles),
-                            isActivated && (isRedDay ? dayHolidaySelectedStyles : daySelectedStyles),
-                            disabled && dayDisabledStyles,
-                          )}
-                        >
-                          {date.getDate()}
-                          {showHolidayDot && (
-                            <span aria-hidden="true"
-                              className="absolute bottom-0.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-rose-400 dark:bg-rose-500" />
-                          )}
-                          {showEventDots && (
-                            <span aria-hidden="true"
-                              className="absolute bottom-0.5 left-0 right-0 flex justify-center gap-px">
-                              {dayEvents.slice(0, 3).map((ev, i) => (
-                                <span
-                                  key={i}
-                                  className={cn(
-                                    'h-1 w-1 rounded-full',
-                                    isActivated
-                                      ? 'bg-white/80'
-                                      : EVENT_DOT[ev.color ?? 'indigo']
-                                  )}
-                                />
-                              ))}
-                            </span>
-                          )}
-                        </button>
+                        {hasTooltip ? (
+                          <Tooltip
+                            placement="top"
+                            delay={300}
+                            content={<EventTooltipContent dayEvents={dayEvents} holiday={holiday} />}
+                          >
+                            {button}
+                          </Tooltip>
+                        ) : button}
                       </div>
                     );
                   })}

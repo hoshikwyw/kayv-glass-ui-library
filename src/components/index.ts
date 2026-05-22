@@ -11,3 +11,4 @@ export * from './Modal';
 export * from './Breadcrumb';
 export * from './Calendar';
 export * from './FileInput';
+export * from './Tooltip';

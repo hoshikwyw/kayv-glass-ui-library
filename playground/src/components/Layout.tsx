@@ -34,6 +34,12 @@ const navigation: NavSection[] = [
     ],
   },
   {
+    category: 'Floating',
+    items: [
+      { label: 'Tooltip', path: '/components/tooltip' },
+    ],
+  },
+  {
     category: 'Media',
     items: [
       { label: 'Avatar', path: '/components/avatar' },
