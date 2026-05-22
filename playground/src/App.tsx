@@ -11,6 +11,7 @@ import AlertPage from './pages/components/AlertPage';
 import InputPage from './pages/components/InputPage';
 import SelectPage from './pages/components/SelectPage';
 import AvatarPage from './pages/components/AvatarPage';
+import ModalPage from './pages/components/ModalPage';
 import ComingSoon from './pages/ComingSoon';
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="components/input" element={<InputPage />} />
           <Route path="components/select" element={<SelectPage />} />
           <Route path="components/avatar" element={<AvatarPage />} />
+          <Route path="components/modal" element={<ModalPage />} />
           <Route path="components/:slug" element={<ComingSoon />} />
         </Route>
       </Routes>

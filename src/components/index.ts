@@ -7,3 +7,4 @@ export * from './Alert';
 export * from './Input';
 export * from './Select';
 export * from './Avatar';
+export * from './Modal';

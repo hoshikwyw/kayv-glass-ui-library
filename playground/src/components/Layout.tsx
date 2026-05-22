@@ -38,6 +38,12 @@ const navigation: NavSection[] = [
       { label: 'Avatar', path: '/components/avatar' },
     ],
   },
+  {
+    category: 'Overlay',
+    items: [
+      { label: 'Modal', path: '/components/modal' },
+    ],
+  },
 ];
 
 export default function Layout() {

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import {
   Zap, Package, FileCode,
   MousePointerClick, Tag, Layers, TextCursor,
-  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2,
+  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal,
   ArrowRight, CheckCircle2,
 } from 'lucide-react';
 import type { ElementType } from 'react';
@@ -95,6 +95,13 @@ const components: {
     path: '/components/avatar',
     desc: 'User representation with image, initials, status, and group stacking.',
     icon: UserCircle2,
+    ready: true,
+  },
+  {
+    label: 'Modal',
+    path: '/components/modal',
+    desc: 'Dialog overlay with focus trap, scroll lock, and smooth animations.',
+    icon: RectangleHorizontal,
     ready: true,
   },
 ];
