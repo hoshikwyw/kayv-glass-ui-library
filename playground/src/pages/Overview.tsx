@@ -46,7 +46,7 @@ const components: {
     path: '/components/badge',
     desc: 'Inline status indicators with semantic color variants.',
     icon: Tag,
-    ready: false,
+    ready: true,
   },
   {
     label: 'Card',
@@ -81,7 +81,7 @@ const components: {
     path: '/components/toast',
     desc: 'Non-blocking notification stack with auto-dismiss.',
     icon: Bell,
-    ready: false,
+    ready: true,
   },
   {
     label: 'Select',

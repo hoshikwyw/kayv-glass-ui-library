@@ -13,7 +13,7 @@ const navigation: NavSection[] = [
   {
     category: 'Data Display',
     items: [
-      { label: 'Badge', path: '/components/badge', soon: true },
+      { label: 'Badge', path: '/components/badge' },
       { label: 'Card', path: '/components/card', soon: true },
       { label: 'Accordion', path: '/components/accordion', soon: true },
     ],
@@ -22,7 +22,7 @@ const navigation: NavSection[] = [
     category: 'Feedback',
     items: [
       { label: 'Alert', path: '/components/alert', soon: true },
-      { label: 'Toast', path: '/components/toast', soon: true },
+      { label: 'Toast', path: '/components/toast' },
     ],
   },
   {

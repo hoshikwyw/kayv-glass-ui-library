@@ -5,3 +5,5 @@ dist/
 playground/node_modules/
 playground/dist/
 .DS_Store
+.claude/
+.npmrc
