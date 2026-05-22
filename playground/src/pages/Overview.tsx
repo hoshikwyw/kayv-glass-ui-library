@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import {
   Zap, Package, FileCode,
   MousePointerClick, Tag, Layers, TextCursor,
-  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation,
+  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, CalendarDays,
   ArrowRight, CheckCircle2,
 } from 'lucide-react';
 import type { ElementType } from 'react';
@@ -109,6 +109,13 @@ const components: {
     path: '/components/breadcrumb',
     desc: 'Navigation trail with icons, truncation, and custom separators.',
     icon: Navigation,
+    ready: true,
+  },
+  {
+    label: 'Calendar',
+    path: '/components/calendar',
+    desc: 'Date and range picker with hover preview and date constraints.',
+    icon: CalendarDays,
     ready: true,
   },
 ];

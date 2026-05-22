@@ -50,6 +50,12 @@ const navigation: NavSection[] = [
       { label: 'Breadcrumb', path: '/components/breadcrumb' },
     ],
   },
+  {
+    category: 'Date & Time',
+    items: [
+      { label: 'Calendar', path: '/components/calendar' },
+    ],
+  },
 ];
 
 export default function Layout() {
