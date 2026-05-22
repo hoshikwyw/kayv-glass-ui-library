@@ -44,6 +44,12 @@ const navigation: NavSection[] = [
       { label: 'Modal', path: '/components/modal' },
     ],
   },
+  {
+    category: 'Navigation',
+    items: [
+      { label: 'Breadcrumb', path: '/components/breadcrumb' },
+    ],
+  },
 ];
 
 export default function Layout() {
