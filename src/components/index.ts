@@ -10,3 +10,4 @@ export * from './Avatar';
 export * from './Modal';
 export * from './Breadcrumb';
 export * from './Calendar';
+export * from './FileInput';

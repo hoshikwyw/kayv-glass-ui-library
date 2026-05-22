@@ -14,6 +14,7 @@ import AvatarPage from './pages/components/AvatarPage';
 import ModalPage from './pages/components/ModalPage';
 import BreadcrumbPage from './pages/components/BreadcrumbPage';
 import CalendarPage from './pages/components/CalendarPage';
+import FileInputPage from './pages/components/FileInputPage';
 import ComingSoon from './pages/ComingSoon';
 
 export default function App() {
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="components/modal" element={<ModalPage />} />
           <Route path="components/breadcrumb" element={<BreadcrumbPage />} />
           <Route path="components/calendar" element={<CalendarPage />} />
+          <Route path="components/file-input" element={<FileInputPage />} />
           <Route path="components/:slug" element={<ComingSoon />} />
         </Route>
       </Routes>

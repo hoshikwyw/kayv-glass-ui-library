@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Copy, Check, Home, Package, Cpu, Laptop, Slash } from 'lucide-react';
-import { Breadcrumb } from '../../../../src';
-import type { BreadcrumbItem } from '../../../../src';
+import { ChevronRight, Copy, Check } from 'lucide-react';
+import { FileInput } from '../../../../src';
+import type { FileValidationError } from '../../../../src';
 
 type Tab = 'preview' | 'code';
 
@@ -11,137 +11,211 @@ type Tab = 'preview' | 'code';
 
 const propsData = [
   {
-    name: 'items',
-    type: 'BreadcrumbItem[]',
-    defaultVal: 'required',
-    description: 'Ordered list of breadcrumb segments. The last item is treated as the current page.',
-  },
-  {
-    name: 'separator',
-    type: 'ReactNode',
-    defaultVal: '<ChevronRight />',
-    description: 'Element rendered between each breadcrumb segment. Override with any icon or string.',
-  },
-  {
-    name: 'maxItems',
-    type: 'number',
-    defaultVal: '—',
-    description: 'Maximum segments to show. When exceeded, interior items collapse into a … ellipsis.',
-  },
-  {
-    name: 'className',
+    name: 'label',
     type: 'string',
     defaultVal: '—',
-    description: 'Extra classes merged onto the nav wrapper via tailwind-merge.',
+    description: 'Visible label rendered above the dropzone and linked via htmlFor.',
+  },
+  {
+    name: 'hint',
+    type: 'string',
+    defaultVal: '—',
+    description: 'Helper text shown below the dropzone when there is no error.',
+  },
+  {
+    name: 'error',
+    type: 'string',
+    defaultVal: '—',
+    description: 'Error message shown below the dropzone; overrides hint and applies error styling.',
+  },
+  {
+    name: 'accept',
+    type: 'string',
+    defaultVal: '—',
+    description: "MIME types or extensions to accept, e.g. \"image/*\" or \".pdf,.docx\". Files that don't match are rejected via onError.",
+  },
+  {
+    name: 'multiple',
+    type: 'boolean',
+    defaultVal: 'false',
+    description: 'Allow selecting or dropping more than one file at a time.',
+  },
+  {
+    name: 'maxSize',
+    type: 'number',
+    defaultVal: '—',
+    description: 'Maximum file size in bytes. Files exceeding this limit are rejected via onError.',
+  },
+  {
+    name: 'maxFiles',
+    type: 'number',
+    defaultVal: '—',
+    description: 'Maximum total files when multiple=true. Additional files beyond the limit are rejected.',
+  },
+  {
+    name: 'size',
+    type: "'sm' | 'md' | 'lg'",
+    defaultVal: "'md'",
+    description: 'Controls the height of the dropzone area.',
+  },
+  {
+    name: 'disabled',
+    type: 'boolean',
+    defaultVal: 'false',
+    description: 'Prevents all interaction and dims the component.',
+  },
+  {
+    name: 'value',
+    type: 'File[]',
+    defaultVal: 'uncontrolled',
+    description: 'Controlled file list. Omit to use uncontrolled internal state.',
+  },
+  {
+    name: 'defaultValue',
+    type: 'File[]',
+    defaultVal: '[]',
+    description: 'Initial file list for uncontrolled mode.',
+  },
+  {
+    name: 'onChange',
+    type: '(files: File[]) => void',
+    defaultVal: '—',
+    description: 'Called with the full updated file list after every add or remove.',
+  },
+  {
+    name: 'onError',
+    type: '(errors: FileValidationError[]) => void',
+    defaultVal: '—',
+    description: 'Called with rejected files and their reasons (type mismatch, size exceeded, count exceeded).',
   },
 ];
 
-const itemPropsData = [
+const errorPropsData = [
   {
-    name: 'label',
-    type: 'string',
-    defaultVal: 'required',
-    description: 'Visible text for the breadcrumb segment.',
+    name: 'file',
+    type: 'File',
+    defaultVal: '—',
+    description: 'The File object that failed validation.',
   },
   {
-    name: 'href',
+    name: 'reason',
     type: 'string',
     defaultVal: '—',
-    description: 'When provided the segment renders as an <a> link; omit for the current page.',
-  },
-  {
-    name: 'icon',
-    type: 'ReactNode',
-    defaultVal: '—',
-    description: 'Optional icon rendered to the left of the label.',
+    description: 'Human-readable rejection reason.',
   },
 ];
 
 // ── Code snippets ──────────────────────────────────────────────────────────────
 
 const snippets: Record<string, string> = {
-  Basic: `import { Breadcrumb } from 'kayv-glass-ui';
-import type { BreadcrumbItem } from 'kayv-glass-ui';
+  Basic: `import { FileInput } from 'kayv-glass-ui';
 
-const items: BreadcrumbItem[] = [
-  { label: 'Home', href: '/' },
-  { label: 'Products', href: '/products' },
-  { label: 'Laptops' },          // no href → current page
-];
+<FileInput label="Upload file" hint="Any file type accepted" />`,
 
-<Breadcrumb items={items} />`,
-
-  'With Icons': `import { Home, Package, Cpu, Laptop } from 'lucide-react';
-
-const items: BreadcrumbItem[] = [
-  { label: 'Home',        href: '/', icon: <Home className="h-3.5 w-3.5" /> },
-  { label: 'Products',   href: '/products', icon: <Package className="h-3.5 w-3.5" /> },
-  { label: 'Electronics', href: '/products/electronics', icon: <Cpu className="h-3.5 w-3.5" /> },
-  { label: 'MacBook Pro', icon: <Laptop className="h-3.5 w-3.5" /> },
-];
-
-<Breadcrumb items={items} />`,
-
-  Truncation: `{/* 6 items — collapse interior segments with maxItems */}
-const deep: BreadcrumbItem[] = [
-  { label: 'Home', href: '/' },
-  { label: 'Shop', href: '/shop' },
-  { label: 'Electronics', href: '/shop/electronics' },
-  { label: 'Computers', href: '/shop/electronics/computers' },
-  { label: 'Laptops', href: '/shop/electronics/computers/laptops' },
-  { label: 'MacBook Pro 14"' },
-];
-
-{/* Shows: Home / … / Laptops / MacBook Pro 14" */}
-<Breadcrumb items={deep} maxItems={3} />
-
-{/* Shows: Home / … / Computers / Laptops / MacBook Pro 14" */}
-<Breadcrumb items={deep} maxItems={4} />`,
-
-  'Custom Separator': `import { Slash } from 'lucide-react';
-
-{/* Icon separator */}
-<Breadcrumb
-  items={items}
-  separator={<Slash className="h-3 w-3 text-slate-300 dark:text-slate-600" />}
-/>
-
-{/* Text dot separator */}
-<Breadcrumb
-  items={items}
-  separator={<span className="text-slate-300 dark:text-slate-600 text-xs">·</span>}
-/>
-
-{/* Arrow separator */}
-<Breadcrumb
-  items={items}
-  separator={<span className="text-slate-300 dark:text-slate-600 text-xs">→</span>}
+  'Multiple Files': `<FileInput
+  label="Upload files"
+  multiple
+  hint="Select or drag multiple files"
 />`,
+
+  'Accept Filter': `{/* Images only */}
+<FileInput
+  label="Upload image"
+  accept="image/*"
+  hint="PNG, JPG, GIF, WebP, etc."
+/>
+
+{/* Documents only */}
+<FileInput
+  label="Upload document"
+  accept=".pdf,.doc,.docx"
+  hint="PDF, DOC, or DOCX"
+/>`,
+
+  'Size Limit': `import { FileInput } from 'kayv-glass-ui';
+import type { FileValidationError } from 'kayv-glass-ui';
+
+function SizeLimitExample() {
+  const [errors, setErrors] = useState<FileValidationError[]>([]);
+
+  return (
+    <>
+      <FileInput
+        label="Upload document"
+        accept=".pdf"
+        maxSize={5 * 1024 * 1024}   // 5 MB
+        hint="PDF only — max 5 MB"
+        onError={setErrors}
+      />
+      {errors.map((e, i) => (
+        <p key={i} className="text-xs text-rose-600">
+          {e.file.name}: {e.reason}
+        </p>
+      ))}
+    </>
+  );
+}`,
+
+  'Max Files': `<FileInput
+  label="Upload images"
+  accept="image/*"
+  multiple
+  maxFiles={3}
+  hint="Up to 3 images"
+/>`,
+
+  Sizes: `<FileInput size="sm" label="Small" />
+<FileInput size="md" label="Medium" />
+<FileInput size="lg" label="Large" />`,
+
+  'Error State': `<FileInput
+  label="Resume"
+  accept=".pdf"
+  error="Please upload a valid PDF file."
+/>`,
+
+  Controlled: `import { useState } from 'react';
+import { FileInput } from 'kayv-glass-ui';
+
+function ControlledFileInput() {
+  const [files, setFiles] = useState<File[]>([]);
+
+  return (
+    <FileInput
+      label="Controlled upload"
+      multiple
+      value={files}
+      onChange={setFiles}
+    />
+  );
+}`,
 };
 
-// ── Fixture data ───────────────────────────────────────────────────────────────
+// ── Demo components ────────────────────────────────────────────────────────────
 
-const basic: BreadcrumbItem[] = [
-  { label: 'Home', href: '#' },
-  { label: 'Products', href: '#' },
-  { label: 'Laptops' },
-];
-
-const deep: BreadcrumbItem[] = [
-  { label: 'Home', href: '#' },
-  { label: 'Shop', href: '#' },
-  { label: 'Electronics', href: '#' },
-  { label: 'Computers', href: '#' },
-  { label: 'Laptops', href: '#' },
-  { label: 'MacBook Pro 14"' },
-];
-
-const withIcons: BreadcrumbItem[] = [
-  { label: 'Home', href: '#', icon: <Home className="h-3.5 w-3.5" /> },
-  { label: 'Products', href: '#', icon: <Package className="h-3.5 w-3.5" /> },
-  { label: 'Electronics', href: '#', icon: <Cpu className="h-3.5 w-3.5" /> },
-  { label: 'MacBook Pro', icon: <Laptop className="h-3.5 w-3.5" /> },
-];
+function SizeLimitDemo() {
+  const [errors, setErrors] = useState<FileValidationError[]>([]);
+  return (
+    <div>
+      <FileInput
+        label="Upload document"
+        accept=".pdf,.doc,.docx"
+        maxSize={5 * 1024 * 1024}
+        hint="PDF, DOC, DOCX — max 5 MB"
+        onError={errs => setErrors(errs)}
+      />
+      {errors.length > 0 && (
+        <ul className="mt-3 flex flex-col gap-1">
+          {errors.map((e, i) => (
+            <li key={i} className="text-xs text-rose-600 dark:text-rose-400">
+              {e.file.name}: {e.reason}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
 
@@ -159,20 +233,9 @@ function PreviewCard({ label, children }: { label: string; children: ReactNode }
           {label}
         </span>
       </div>
-      <div className="px-6 py-8 flex flex-col gap-5">
+      <div className="px-6 py-8">
         {children}
       </div>
-    </div>
-  );
-}
-
-function PreviewRow({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-        {label}
-      </span>
-      {children}
     </div>
   );
 }
@@ -276,7 +339,7 @@ function PropsTable({ data }: { data: typeof propsData }) {
 
 // ── Page ───────────────────────────────────────────────────────────────────────
 
-export default function BreadcrumbPage() {
+export default function FileInputPage() {
   const [tab, setTab] = useState<Tab>('preview');
 
   return (
@@ -292,21 +355,22 @@ export default function BreadcrumbPage() {
           Components
         </Link>
         <ChevronRight className="h-3 w-3" />
-        <span className="text-slate-700 dark:text-slate-300">Breadcrumb</span>
+        <span className="text-slate-700 dark:text-slate-300">File Input</span>
       </nav>
 
       {/* Title + description */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight mb-2
           text-slate-900 dark:text-white">
-          Breadcrumb
+          File Input
         </h1>
         <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-xl">
-          Navigation trail built with semantic <Chip>{"<nav>"}</Chip> and{' '}
-          <Chip>{"<ol>"}</Chip> markup. Supports per-item icons, a configurable{' '}
-          <Chip>separator</Chip>, and automatic truncation via <Chip>maxItems</Chip> that
-          collapses interior segments into a … ellipsis while always keeping the first and
-          last items visible.
+          Drag-and-drop file upload built with a glass dropzone. Accepts single or{' '}
+          <Chip>multiple</Chip> files with optional <Chip>accept</Chip> type filtering,{' '}
+          <Chip>maxSize</Chip> per-file limits, and <Chip>maxFiles</Chip> count limits.
+          Rejected files are surfaced through <Chip>onError</Chip> with a typed{' '}
+          <Chip>FileValidationError</Chip> object. Supports both controlled and
+          uncontrolled modes.
         </p>
       </div>
 
@@ -334,49 +398,55 @@ export default function BreadcrumbPage() {
       {tab === 'preview' && (
         <div className="flex flex-col gap-4 mb-12">
           <PreviewCard label="Basic">
-            <PreviewRow label="3 items">
-              <Breadcrumb items={basic} />
-            </PreviewRow>
-            <PreviewRow label="Single — current page only">
-              <Breadcrumb items={[{ label: 'Dashboard' }]} />
-            </PreviewRow>
+            <FileInput label="Upload file" hint="Any file type accepted" />
           </PreviewCard>
 
-          <PreviewCard label="With Icons">
-            <Breadcrumb items={withIcons} />
+          <PreviewCard label="Multiple Files">
+            <FileInput label="Upload files" multiple hint="Select or drag multiple files" />
           </PreviewCard>
 
-          <PreviewCard label="Truncation — maxItems">
-            <PreviewRow label="maxItems=3 — 6 items, interior collapsed">
-              <Breadcrumb items={deep} maxItems={3} />
-            </PreviewRow>
-            <PreviewRow label="maxItems=4">
-              <Breadcrumb items={deep} maxItems={4} />
-            </PreviewRow>
-            <PreviewRow label="No truncation — all 6 shown">
-              <Breadcrumb items={deep} />
-            </PreviewRow>
+          <PreviewCard label="Accept Filter — Images Only">
+            <FileInput label="Upload image" accept="image/*" hint="PNG, JPG, GIF, WebP, etc." />
           </PreviewCard>
 
-          <PreviewCard label="Custom Separator">
-            <PreviewRow label="Slash icon">
-              <Breadcrumb
-                items={basic}
-                separator={<Slash className="h-3 w-3 text-slate-300 dark:text-slate-600" />}
-              />
-            </PreviewRow>
-            <PreviewRow label="Dot ·">
-              <Breadcrumb
-                items={basic}
-                separator={<span className="text-slate-300 dark:text-slate-600 text-xs select-none">·</span>}
-              />
-            </PreviewRow>
-            <PreviewRow label="Arrow →">
-              <Breadcrumb
-                items={basic}
-                separator={<span className="text-slate-300 dark:text-slate-600 text-xs select-none">→</span>}
-              />
-            </PreviewRow>
+          <PreviewCard label="Size Limit — 5 MB max">
+            <SizeLimitDemo />
+          </PreviewCard>
+
+          <PreviewCard label="Max Files — up to 3">
+            <FileInput
+              label="Upload images"
+              accept="image/*"
+              multiple
+              maxFiles={3}
+              hint="Up to 3 images"
+            />
+          </PreviewCard>
+
+          <PreviewCard label="Sizes">
+            <div className="flex flex-col gap-6">
+              {(['sm', 'md', 'lg'] as const).map(size => (
+                <div key={size}>
+                  <p className="text-[10px] font-semibold uppercase tracking-wider
+                    text-slate-400 dark:text-slate-500 mb-2">
+                    {size}
+                  </p>
+                  <FileInput size={size} accept="image/*" />
+                </div>
+              ))}
+            </div>
+          </PreviewCard>
+
+          <PreviewCard label="Error State">
+            <FileInput
+              label="Resume"
+              accept=".pdf"
+              error="Please upload a valid PDF file."
+            />
+          </PreviewCard>
+
+          <PreviewCard label="Disabled">
+            <FileInput label="Upload" disabled hint="File upload is currently disabled." />
           </PreviewCard>
         </div>
       )}
@@ -396,12 +466,12 @@ export default function BreadcrumbPage() {
         </div>
       )}
 
-      {/* ── PROPS TABLE ─────────────────────────────────── */}
+      {/* ── PROPS TABLES ─────────────────────────────────── */}
       <div className="flex flex-col gap-8">
         <div>
           <h2 className="text-xs font-semibold tracking-wider uppercase mb-3
             text-slate-400 dark:text-slate-500">
-            Props API — Breadcrumb
+            Props API — FileInput
           </h2>
           <PropsTable data={propsData} />
         </div>
@@ -409,9 +479,9 @@ export default function BreadcrumbPage() {
         <div>
           <h2 className="text-xs font-semibold tracking-wider uppercase mb-3
             text-slate-400 dark:text-slate-500">
-            BreadcrumbItem
+            FileValidationError
           </h2>
-          <PropsTable data={itemPropsData} />
+          <PropsTable data={errorPropsData} />
         </div>
       </div>
     </div>

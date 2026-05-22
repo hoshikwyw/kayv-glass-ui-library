@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import {
   Zap, Package, FileCode,
   MousePointerClick, Tag, Layers, TextCursor,
-  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, CalendarDays,
+  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, CalendarDays, Upload,
   ArrowRight, CheckCircle2,
 } from 'lucide-react';
 import type { ElementType } from 'react';
@@ -116,6 +116,13 @@ const components: {
     path: '/components/calendar',
     desc: 'Date and range picker with hover preview and date constraints.',
     icon: CalendarDays,
+    ready: true,
+  },
+  {
+    label: 'File Input',
+    path: '/components/file-input',
+    desc: 'Drag-and-drop file upload with type, size, and count validation.',
+    icon: Upload,
     ready: true,
   },
 ];

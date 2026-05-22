@@ -30,6 +30,7 @@ const navigation: NavSection[] = [
     items: [
       { label: 'Input', path: '/components/input' },
       { label: 'Select', path: '/components/select' },
+      { label: 'File Input', path: '/components/file-input' },
     ],
   },
   {
