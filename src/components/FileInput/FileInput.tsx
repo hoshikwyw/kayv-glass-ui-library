@@ -4,6 +4,14 @@ import { forwardRef, useId, useRef, useState } from 'react';
 import { cn } from '../../utils/cn';
 import {
   browseSpanBase,
+  buttonVariantDisabledStyles,
+  buttonVariantEmptyStyles,
+  buttonVariantFileStyles,
+  buttonVariantStatusBase,
+  buttonVariantTriggerBase,
+  buttonVariantTriggerErrorStyles,
+  buttonVariantTriggerSizeStyles,
+  buttonVariantWrapperBase,
   dropzoneBase,
   dropzoneDragStyles,
   dropzoneDisabledStyles,
@@ -46,6 +54,14 @@ const XSmallIcon = () => (
   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.75"
     strokeLinecap="round" className="h-3 w-3" aria-hidden="true">
     <path d="M3 3l10 10M13 3L3 13" />
+  </svg>
+);
+
+const UploadIconSm = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75"
+    strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5" aria-hidden="true">
+    <path d="M12 16V4m0 0L8 8m4-4 4 4" />
+    <path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1" />
   </svg>
 );
 
@@ -117,6 +133,7 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
       label,
       hint,
       error,
+      variant = 'dropzone',
       size = 'md',
       disabled = false,
       id: externalId,
@@ -215,77 +232,163 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
           </label>
         )}
 
-        {/* ── Dropzone ────────────────────────────────────────────────────── */}
-        <div
-          role="button"
-          tabIndex={disabled ? -1 : 0}
-          aria-label={`File upload${multiple ? ' — multiple files allowed' : ''}`}
-          aria-disabled={disabled}
-          aria-invalid={hasError ? true : undefined}
-          aria-describedby={hasDesc ? descId : undefined}
-          onClick={handleClick}
-          onKeyDown={handleKeyDown}
-          onDragEnter={handleDragEnter}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          className={cn(
-            dropzoneBase,
-            dropzoneSizeStyles[size],
-            isDragging && dropzoneDragStyles,
-            hasError && !isDragging && dropzoneErrorStyles,
-            disabled && dropzoneDisabledStyles,
-          )}
-        >
-          <input
-            ref={setRef}
-            type="file"
-            id={id}
-            accept={accept}
-            multiple={multiple}
-            disabled={disabled}
-            onChange={handleInputChange}
-            className="sr-only"
-            tabIndex={-1}
-          />
-
-          <UploadIcon />
-
-          <div className="flex flex-col gap-1">
-            <p className={dropzoneTitleBase}>
-              Drag & drop {multiple ? 'files' : 'a file'} here
-            </p>
-            <p className={dropzoneHintBase}>
-              or <span className={browseSpanBase}>browse files</span>
-            </p>
-          </div>
-
-          {constraintHint && (
-            <p className={cn(dropzoneHintBase, 'text-[10px]')}>{constraintHint}</p>
-          )}
-        </div>
-
-        {/* ── File list ───────────────────────────────────────────────────── */}
-        {files.length > 0 && (
-          <ul className={fileListBase} aria-label="Selected files">
-            {files.map((file, i) => (
-              <li key={`${file.name}-${file.size}-${i}`} className={fileItemBase}>
-                <FileIcon />
-                <span className={fileNameBase} title={file.name}>{file.name}</span>
-                <span className={fileSizeBase}>{formatSize(file.size)}</span>
-                {!disabled && (
-                  <button
-                    type="button"
-                    aria-label={`Remove ${file.name}`}
-                    onClick={e => { e.stopPropagation(); removeFile(i); }}
-                    className={fileRemoveBase}
-                  >
-                    <XSmallIcon />
-                  </button>
+        {/* ── Button variant ───────────────────────────────────────────────── */}
+        {variant === 'button' && (
+          <>
+            <input
+              ref={setRef}
+              type="file"
+              id={id}
+              accept={accept}
+              multiple={multiple}
+              disabled={disabled}
+              onChange={handleInputChange}
+              className="sr-only"
+              tabIndex={-1}
+            />
+            <div className={buttonVariantWrapperBase}>
+              <button
+                type="button"
+                onClick={handleClick}
+                disabled={disabled}
+                aria-describedby={hasDesc ? descId : undefined}
+                aria-invalid={hasError ? true : undefined}
+                className={cn(
+                  buttonVariantTriggerBase,
+                  buttonVariantTriggerSizeStyles[size],
+                  hasError && buttonVariantTriggerErrorStyles,
+                  disabled && buttonVariantDisabledStyles,
                 )}
-              </li>
-            ))}
-          </ul>
+              >
+                <UploadIconSm />
+                Choose File{multiple ? 's' : ''}
+              </button>
+
+              {files.length === 0 ? (
+                <span className={cn(buttonVariantStatusBase, buttonVariantEmptyStyles)}>
+                  No file chosen
+                </span>
+              ) : (
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className={cn(buttonVariantStatusBase, buttonVariantFileStyles)} title={
+                    files.length === 1 ? files[0].name : `${files.length} files`
+                  }>
+                    {files.length === 1 ? files[0].name : `${files.length} files selected`}
+                  </span>
+                  {!disabled && (
+                    <button
+                      type="button"
+                      aria-label="Clear selection"
+                      onClick={() => updateFiles([])}
+                      className={fileRemoveBase}
+                    >
+                      <XSmallIcon />
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* File list for multiple */}
+            {multiple && files.length > 1 && (
+              <ul className={fileListBase} aria-label="Selected files">
+                {files.map((file, i) => (
+                  <li key={`${file.name}-${file.size}-${i}`} className={fileItemBase}>
+                    <FileIcon />
+                    <span className={fileNameBase} title={file.name}>{file.name}</span>
+                    <span className={fileSizeBase}>{formatSize(file.size)}</span>
+                    {!disabled && (
+                      <button
+                        type="button"
+                        aria-label={`Remove ${file.name}`}
+                        onClick={() => removeFile(i)}
+                        className={fileRemoveBase}
+                      >
+                        <XSmallIcon />
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        )}
+
+        {/* ── Dropzone variant ─────────────────────────────────────────────── */}
+        {variant === 'dropzone' && (
+          <>
+            <div
+              role="button"
+              tabIndex={disabled ? -1 : 0}
+              aria-label={`File upload${multiple ? ' — multiple files allowed' : ''}`}
+              aria-disabled={disabled}
+              aria-invalid={hasError ? true : undefined}
+              aria-describedby={hasDesc ? descId : undefined}
+              onClick={handleClick}
+              onKeyDown={handleKeyDown}
+              onDragEnter={handleDragEnter}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              className={cn(
+                dropzoneBase,
+                dropzoneSizeStyles[size],
+                isDragging && dropzoneDragStyles,
+                hasError && !isDragging && dropzoneErrorStyles,
+                disabled && dropzoneDisabledStyles,
+              )}
+            >
+              <input
+                ref={setRef}
+                type="file"
+                id={id}
+                accept={accept}
+                multiple={multiple}
+                disabled={disabled}
+                onChange={handleInputChange}
+                className="sr-only"
+                tabIndex={-1}
+              />
+
+              <UploadIcon />
+
+              <div className="flex flex-col gap-1">
+                <p className={dropzoneTitleBase}>
+                  Drag & drop {multiple ? 'files' : 'a file'} here
+                </p>
+                <p className={dropzoneHintBase}>
+                  or <span className={browseSpanBase}>browse files</span>
+                </p>
+              </div>
+
+              {constraintHint && (
+                <p className={cn(dropzoneHintBase, 'text-[10px]')}>{constraintHint}</p>
+              )}
+            </div>
+
+            {/* File list */}
+            {files.length > 0 && (
+              <ul className={fileListBase} aria-label="Selected files">
+                {files.map((file, i) => (
+                  <li key={`${file.name}-${file.size}-${i}`} className={fileItemBase}>
+                    <FileIcon />
+                    <span className={fileNameBase} title={file.name}>{file.name}</span>
+                    <span className={fileSizeBase}>{formatSize(file.size)}</span>
+                    {!disabled && (
+                      <button
+                        type="button"
+                        aria-label={`Remove ${file.name}`}
+                        onClick={e => { e.stopPropagation(); removeFile(i); }}
+                        className={fileRemoveBase}
+                      >
+                        <XSmallIcon />
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         )}
 
         {/* ── Hint / error ────────────────────────────────────────────────── */}

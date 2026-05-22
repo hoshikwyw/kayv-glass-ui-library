@@ -11,6 +11,12 @@ type Tab = 'preview' | 'code';
 
 const propsData = [
   {
+    name: 'variant',
+    type: "'dropzone' | 'button'",
+    defaultVal: "'dropzone'",
+    description: "dropzone: large drag-and-drop area. button: compact inline 'Choose File' button with filename display.",
+  },
+  {
     name: 'label',
     type: 'string',
     defaultVal: '—',
@@ -108,6 +114,23 @@ const errorPropsData = [
 // ── Code snippets ──────────────────────────────────────────────────────────────
 
 const snippets: Record<string, string> = {
+  'Button Variant': `{/* Compact inline button — no drag-and-drop */}
+<FileInput variant="button" label="Attachment" />
+
+{/* Multiple files with button variant */}
+<FileInput
+  variant="button"
+  label="Attachments"
+  multiple
+  accept=".pdf,.doc,.docx"
+  hint="PDF or Word documents"
+/>
+
+{/* Sizes */}
+<FileInput variant="button" size="sm" label="Small" />
+<FileInput variant="button" size="md" label="Medium" />
+<FileInput variant="button" size="lg" label="Large" />`,
+
   Basic: `import { FileInput } from 'kayv-glass-ui';
 
 <FileInput label="Upload file" hint="Any file type accepted" />`,
@@ -397,6 +420,26 @@ export default function FileInputPage() {
       {/* ── PREVIEW TAB ─────────────────────────────────── */}
       {tab === 'preview' && (
         <div className="flex flex-col gap-4 mb-12">
+          <PreviewCard label="Button Variant">
+            <div className="flex flex-col gap-5 w-full max-w-sm">
+              <FileInput variant="button" label="Attachment" hint="Any file type" />
+              <FileInput variant="button" label="Attachments" multiple accept=".pdf,.doc,.docx" hint="PDF or Word documents" />
+              <FileInput variant="button" label="Image" accept="image/*" error="Please choose an image file." />
+              <FileInput variant="button" label="Disabled" disabled hint="Upload is disabled." />
+            </div>
+          </PreviewCard>
+
+          <PreviewCard label="Button Variant — Sizes">
+            <div className="flex flex-col gap-4 w-full max-w-sm">
+              {(['sm', 'md', 'lg'] as const).map(size => (
+                <div key={size}>
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">{size}</p>
+                  <FileInput variant="button" size={size} label={`Size ${size}`} />
+                </div>
+              ))}
+            </div>
+          </PreviewCard>
+
           <PreviewCard label="Basic">
             <FileInput label="Upload file" hint="Any file type accepted" />
           </PreviewCard>

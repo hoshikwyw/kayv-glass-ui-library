@@ -1,2 +1,2 @@
 export { FileInput } from './FileInput';
-export type { FileInputProps, FileInputSize, FileValidationError } from './FileInput.types';
+export type { FileInputProps, FileInputSize, FileInputVariant, FileValidationError } from './FileInput.types';

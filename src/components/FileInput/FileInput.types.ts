@@ -1,4 +1,5 @@
 export type FileInputSize = 'sm' | 'md' | 'lg';
+export type FileInputVariant = 'dropzone' | 'button';
 
 export interface FileValidationError {
   file: File;
@@ -21,6 +22,7 @@ export interface FileInputProps {
   hint?: string;
   error?: string;
   // Config
+  variant?: FileInputVariant;
   size?: FileInputSize;
   disabled?: boolean;
   id?: string;

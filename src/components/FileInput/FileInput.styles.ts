@@ -67,3 +67,37 @@ export const fileRemoveBase =
 export const hintBase = 'text-xs text-slate-500 dark:text-slate-400';
 
 export const errorTextBase = 'text-xs text-rose-600 dark:text-rose-400';
+
+// ── Button variant ─────────────────────────────────────────────────────────────
+
+export const buttonVariantWrapperBase = 'flex items-center gap-3 min-w-0';
+
+export const buttonVariantTriggerBase =
+  'inline-flex shrink-0 items-center gap-1.5 rounded-lg font-medium ' +
+  'bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm ' +
+  'border border-white/70 dark:border-white/10 ' +
+  'shadow-sm shadow-slate-100/40 dark:shadow-black/15 ' +
+  'text-slate-700 dark:text-slate-200 ' +
+  'hover:bg-white dark:hover:bg-slate-700 ' +
+  'hover:shadow-md hover:border-slate-200/80 dark:hover:border-white/15 ' +
+  'transition-all duration-150 cursor-pointer select-none ' +
+  'focus:outline-none focus-visible:ring-2 ' +
+  'focus-visible:ring-indigo-300/70 dark:focus-visible:ring-indigo-500/40';
+
+export const buttonVariantTriggerSizeStyles: Record<import('./FileInput.types').FileInputSize, string> = {
+  sm: 'px-2.5 py-1 text-xs',
+  md: 'px-3.5 py-1.5 text-sm',
+  lg: 'px-4 py-2 text-sm',
+};
+
+export const buttonVariantTriggerErrorStyles =
+  'border-rose-300/80 dark:border-rose-500/50 ' +
+  'text-rose-700 dark:text-rose-300';
+
+export const buttonVariantDisabledStyles = 'opacity-40 pointer-events-none';
+
+export const buttonVariantStatusBase = 'text-sm truncate min-w-0';
+
+export const buttonVariantEmptyStyles = 'text-slate-400 dark:text-slate-500 italic';
+
+export const buttonVariantFileStyles = 'text-slate-600 dark:text-slate-300';

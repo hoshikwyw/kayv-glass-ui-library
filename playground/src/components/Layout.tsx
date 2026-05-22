@@ -1,6 +1,51 @@
 import { useState, useEffect } from 'react';
-import { Search, Zap, ExternalLink, Sun, Moon } from 'lucide-react';
+import { Search, ExternalLink, Sun, Moon } from 'lucide-react';
 import { NavLink, Outlet, Link } from 'react-router-dom';
+
+function AppIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+      <defs>
+        <linearGradient id="li-bg" x1="5%" y1="0%" x2="95%" y2="100%">
+          <stop offset="0%" stopColor="#4F46E5"/>
+          <stop offset="100%" stopColor="#7C3AED"/>
+        </linearGradient>
+        <radialGradient id="li-accent" cx="50%" cy="100%" r="70%">
+          <stop offset="0%" stopColor="#818CF8" stopOpacity="0.35"/>
+          <stop offset="100%" stopColor="#818CF8" stopOpacity="0"/>
+        </radialGradient>
+        <radialGradient id="li-sheen" cx="22%" cy="16%" r="58%">
+          <stop offset="0%" stopColor="white" stopOpacity="0.28"/>
+          <stop offset="100%" stopColor="white" stopOpacity="0"/>
+        </radialGradient>
+        <clipPath id="li-clip">
+          <rect width="100" height="100" rx="22"/>
+        </clipPath>
+      </defs>
+      <rect width="100" height="100" rx="22" fill="url(#li-bg)"/>
+      <rect width="100" height="100" rx="22" fill="url(#li-accent)"/>
+      <g clipPath="url(#li-clip)">
+        <rect x="13" y="33" width="68" height="46" rx="10"
+              fill="white" fillOpacity="0.06"
+              stroke="white" strokeOpacity="0.12" strokeWidth="1"
+              transform="rotate(-7 47 56)"/>
+        <rect x="19" y="24" width="62" height="46" rx="9"
+              fill="white" fillOpacity="0.10"
+              stroke="white" strokeOpacity="0.18" strokeWidth="1"
+              transform="rotate(5 50 47)"/>
+      </g>
+      <line x1="31.5" y1="21" x2="31.5" y2="79"
+            stroke="white" strokeWidth="12" strokeLinecap="round"/>
+      <line x1="31.5" y1="50" x2="71" y2="21"
+            stroke="white" strokeWidth="11.5" strokeLinecap="round" strokeOpacity="0.90"/>
+      <line x1="31.5" y1="50" x2="71" y2="79"
+            stroke="white" strokeWidth="11.5" strokeLinecap="round" strokeOpacity="0.90"/>
+      <rect width="100" height="100" rx="22" fill="url(#li-sheen)"/>
+      <rect x="1" y="1" width="98" height="98" rx="21"
+            fill="none" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
+    </svg>
+  );
+}
 
 type NavItem = { label: string; path: string; soon?: boolean };
 type NavSection = { category: string; items: NavItem[] };
@@ -117,9 +162,10 @@ export default function Layout() {
           shadow-sm shadow-slate-100/50 dark:shadow-black/20">
 
           <Link to="/overview" className="flex items-center gap-2.5 shrink-0">
-            <Zap className="h-4 w-4 text-indigo-500" />
+            <AppIcon className="h-7 w-7 rounded-lg" />
             <span className="font-bold text-sm text-slate-900 dark:text-white tracking-tight">
-              kayv-glass-ui
+              kayv
+              <span className="font-normal text-slate-400 dark:text-slate-500">-glass-ui</span>
             </span>
             <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full
               bg-indigo-50 text-indigo-600 border border-indigo-200/60
