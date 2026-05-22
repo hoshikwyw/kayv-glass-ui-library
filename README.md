@@ -2,7 +2,7 @@
 
 A production-grade React component library built with TypeScript and Tailwind CSS. The design language centres on iOS-inspired glass morphism — translucent surfaces, `backdrop-blur`, and razor-thin borders — while keeping the component API clean, fully typed, and framework-agnostic.
 
-> **Status:** Early development — `v0.1.0`. The core infrastructure (build pipeline, theme stubs, utility layer) is stable. Components are being added incrementally. See the [Roadmap](#roadmap) for what is coming next.
+> **Status:** `v0.1.0` — 14 components shipped. Core infrastructure is stable.
 
 ---
 
@@ -15,6 +15,19 @@ A production-grade React component library built with TypeScript and Tailwind CS
 - [Usage](#usage)
 - [Components](#components)
   - [Button](#button)
+  - [Badge](#badge)
+  - [Card](#card)
+  - [Input](#input)
+  - [Select](#select)
+  - [Accordion](#accordion)
+  - [Alert](#alert)
+  - [Toast](#toast)
+  - [Avatar](#avatar)
+  - [Modal](#modal)
+  - [Breadcrumb](#breadcrumb)
+  - [Calendar](#calendar)
+  - [FileInput](#fileinput)
+  - [Tooltip](#tooltip)
 - [Utilities](#utilities)
 - [Theme System](#theme-system)
 - [Project Structure](#project-structure)
@@ -28,26 +41,27 @@ A production-grade React component library built with TypeScript and Tailwind CS
 
 ## Features
 
-- **Glass morphism design system** — `backdrop-blur`, translucent fills, and subtle borders that work on both light and dark backgrounds.
+- **Glass morphism design system** — `backdrop-blur`, translucent fills, and subtle borders that adapt to both light and dark backgrounds.
 - **Fully typed** — Every prop, variant, and export has explicit TypeScript types. No `any` escape hatches.
 - **Tree-shakeable** — `sideEffects: false` in the manifest. Bundlers only ship what you import.
 - **Dual format** — Ships both ESM (`.mjs`) and CJS (`.js`) so it works in Vite, Next.js, Webpack, and plain Node pipelines.
-- **React Server Components ready** — Every output file is prefixed with `"use client"` so the library works in RSC-aware frameworks without manual directives.
-- **Safe class merging** — `clsx` + `tailwind-merge` in the `cn()` utility ensures incoming `className` overrides always win without generating conflicting Tailwind classes.
-- **`ref`-forwarding throughout** — Every component uses `React.forwardRef`, so refs work as expected for consumers who need to control focus or measure DOM nodes.
+- **React Server Components ready** — Every output file is prefixed with `"use client"`.
+- **Safe class merging** — `clsx` + `tailwind-merge` in the `cn()` utility ensures incoming `className` overrides always win.
+- **`ref`-forwarding throughout** — Every component uses `React.forwardRef`.
+- **Portal-based overlays** — Modal, Select, and Tooltip use `ReactDOM.createPortal` to escape stacking contexts.
 
 ---
 
 ## Prerequisites
 
-| Dependency | Version |
-|---|---|
-| Node.js | ≥ 18 |
-| React | ≥ 18.0.0 |
-| Tailwind CSS | ≥ 3.4 |
-| TypeScript | ≥ 5.0 _(optional but recommended)_ |
+| Dependency   | Version                            |
+| ------------ | ---------------------------------- |
+| Node.js      | ≥ 18                               |
+| React        | ≥ 18.0.0                           |
+| Tailwind CSS | ≥ 3.4                              |
+| TypeScript   | ≥ 5.0 _(optional but recommended)_ |
 
-React and React DOM are **peer dependencies** — they are not bundled into the library output. Your application is expected to supply them.
+React and React DOM are **peer dependencies** — they are not bundled into the library output.
 
 ---
 
@@ -70,7 +84,7 @@ yarn add kayv-glass-ui
 
 ### 1 — Tailwind CSS content paths
 
-The library ships pre-compiled class strings from `src/components/**`. To prevent Tailwind's content scanner from purging those classes in your production build, add the library's component path to your `tailwind.config.js`:
+Add the library's component path to your `tailwind.config.js` so Tailwind doesn't purge library classes in production:
 
 ```js
 // tailwind.config.js
@@ -82,11 +96,9 @@ export default {
 };
 ```
 
-> **Why?** Tailwind scans your source files at build time to generate only the classes that are used. Without this path, any Tailwind class applied by a library component will be stripped from the final CSS bundle in production.
-
 ### 2 — Global CSS (optional but recommended)
 
-The glass effect relies on having a textured or coloured backdrop behind the components. A flat white or grey background will make the `backdrop-blur` effect invisible. Pair the library with a gradient or mesh background:
+The glass effect is most visible against a textured or coloured backdrop:
 
 ```css
 /* globals.css */
@@ -101,16 +113,10 @@ body {
 ## Usage
 
 ```tsx
-import { Button } from 'kayv-glass-ui';
+import { Button, Badge, Toast } from 'kayv-glass-ui';
 
 export function SaveForm() {
   const [saving, setSaving] = useState(false);
-
-  const handleSave = async () => {
-    setSaving(true);
-    await save();
-    setSaving(false);
-  };
 
   return (
     <div className="flex items-center gap-3">
@@ -125,77 +131,464 @@ export function SaveForm() {
 }
 ```
 
-You can also import the `cn` utility if you want to compose Tailwind classes elsewhere in your project with the same conflict-resolution behaviour:
-
-```tsx
-import { cn } from 'kayv-glass-ui';
-
-const card = cn('rounded-2xl bg-white/40 border border-white/60', isActive && 'ring-2 ring-indigo-500');
-```
-
 ---
 
 ## Components
 
 ### Button
 
-A fully accessible, `ref`-forwarding button with a glass morphism aesthetic. Supports three semantic variants, three sizes, a stable loading state, and passes all native HTML button attributes to the underlying element.
+Accessible `ref`-forwarding button with three variants, three sizes, and a stable loading state.
 
 #### Props
 
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `variant` | `'primary' \| 'secondary' \| 'ghost'` | `'primary'` | Controls the glass style. |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Controls height, padding, and font size. |
-| `isLoading` | `boolean` | `false` | Overlays a centred spinner. Button dimensions do not change when toggled — content is hidden via `opacity-0`, not removed. Sets `aria-busy` automatically. |
-| `disabled` | `boolean` | `false` | Forwarded as the native `disabled` attribute. Reduces opacity to 40% and disables pointer events. |
-| `className` | `string` | — | Merged on top of the base and variant classes via `tailwind-merge`. Your classes always win in any conflict. |
-| `ref` | `React.Ref<HTMLButtonElement>` | — | Forwarded to the underlying `<button>` element. |
-| `...props` | `React.ComponentPropsWithoutRef<'button'>` | — | All remaining props are spread directly onto the button element. |
-
-#### Variants
+| Prop        | Type                                     | Default     | Description                                         |
+| ----------- | ---------------------------------------- | ----------- | --------------------------------------------------- |
+| `variant`   | `'primary' \| 'secondary' \| 'ghost'`   | `'primary'` | Glass style.                                        |
+| `size`      | `'sm' \| 'md' \| 'lg'`                  | `'md'`      | Controls height, padding, and font size.            |
+| `isLoading` | `boolean`                                | `false`     | Overlays a centred spinner. Sets `aria-busy`.       |
+| `disabled`  | `boolean`                                | `false`     | Reduces opacity and disables pointer events.        |
+| `className` | `string`                                 | —           | Merged via `tailwind-merge`.                        |
+| `ref`       | `React.Ref<HTMLButtonElement>`           | —           | Forwarded to the `<button>` element.                |
+| `...props`  | `React.ComponentPropsWithoutRef<'button'>` | —         | Spread onto the button element.                     |
 
 ```tsx
-// Frosted white glass — default for primary actions
-<Button variant="primary">Save</Button>
-
-// Sapphire tint — for secondary or confirmatory actions
+<Button variant="primary" size="md">Save</Button>
 <Button variant="secondary">Preview</Button>
-
-// Fully transparent until hovered — for low-emphasis actions
 <Button variant="ghost">Cancel</Button>
+<Button isLoading variant="primary">Submit</Button>
 ```
 
-#### Sizes
+---
+
+### Badge
+
+Inline label for status, categories, or metadata.
+
+#### Props
+
+| Prop        | Type                                                             | Default     | Description           |
+| ----------- | ---------------------------------------------------------------- | ----------- | --------------------- |
+| `variant`   | `'default' \| 'primary' \| 'success' \| 'warning' \| 'danger'` | `'default'` | Color intent.         |
+| `size`      | `'sm' \| 'md'`                                                   | `'md'`      | Font and padding.     |
+| `className` | `string`                                                         | —           | Merged via `tailwind-merge`. |
 
 ```tsx
-<Button size="sm">Small</Button>   {/* h-8  px-3  text-xs  */}
-<Button size="md">Medium</Button>  {/* h-10 px-4  text-sm  */}
-<Button size="lg">Large</Button>   {/* h-12 px-6  text-base */}
+<Badge variant="success">Active</Badge>
+<Badge variant="danger" size="sm">Error</Badge>
 ```
 
-#### Loading state
+---
 
-The spinner overlays the button content absolutely. The button width is preserved by keeping the children rendered but invisible — no layout shift when toggling.
+### Card
+
+A glass-surface container for grouping related content.
+
+#### Props
+
+| Prop        | Type                                             | Default     | Description                     |
+| ----------- | ------------------------------------------------ | ----------- | ------------------------------- |
+| `variant`   | `'default' \| 'elevated' \| 'bordered' \| 'ghost'` | `'default'` | Surface treatment.          |
+| `padding`   | `'none' \| 'sm' \| 'md' \| 'lg'`                | `'md'`      | Inner spacing.                  |
+| `className` | `string`                                         | —           | Merged via `tailwind-merge`.    |
 
 ```tsx
-<Button isLoading variant="primary">
-  Submit
-</Button>
+<Card variant="elevated" padding="lg">
+  <h2>Title</h2>
+  <p>Content goes here.</p>
+</Card>
 ```
 
-#### Overriding styles
+---
 
-`className` is merged with `tailwind-merge`, so you can override any part of the default styling without worrying about specificity or class ordering:
+### Input
+
+Text input with label, helper text, error state, leading/trailing icon slots, and size variants.
+
+#### Props
+
+| Prop          | Type                    | Default | Description                              |
+| ------------- | ----------------------- | ------- | ---------------------------------------- |
+| `label`       | `string`                | —       | Floating label above the field.          |
+| `helperText`  | `string`                | —       | Hint text below the field.               |
+| `error`       | `string`                | —       | Error message; triggers error styling.   |
+| `size`        | `'sm' \| 'md' \| 'lg'` | `'md'`  | Controls height and font size.           |
+| `leadingIcon` | `ReactNode`             | —       | Icon rendered inside the left edge.      |
+| `trailingIcon`| `ReactNode`             | —       | Icon rendered inside the right edge.     |
+| `className`   | `string`                | —       | Merged via `tailwind-merge`.             |
+| `ref`         | `React.Ref<HTMLInputElement>` | — | Forwarded to the `<input>` element.  |
+| `...props`    | `React.ComponentPropsWithoutRef<'input'>` | — | Spread onto the input.  |
 
 ```tsx
-// Round pill shape
-<Button className="rounded-full px-6">Pill</Button>
+<Input label="Email" type="email" placeholder="you@example.com" />
+<Input label="Username" error="Already taken" />
+<Input leadingIcon={<Search className="h-4 w-4" />} placeholder="Search…" />
+```
 
-// Gradient fill — bg-* override wins via tailwind-merge
-<Button className="bg-gradient-to-r from-indigo-500 to-violet-600 text-white border-0">
-  Gradient
-</Button>
+---
+
+### Select
+
+Portal-based custom select with keyboard navigation and multi-select support.
+
+#### Props
+
+| Prop          | Type                                 | Default    | Description                                    |
+| ------------- | ------------------------------------ | ---------- | ---------------------------------------------- |
+| `options`     | `SelectOption[]`                     | —          | `{ value, label, disabled? }` array.           |
+| `value`       | `string \| string[]`                 | —          | Controlled value.                              |
+| `defaultValue`| `string \| string[]`                 | —          | Uncontrolled initial value.                    |
+| `onChange`    | `(value: string \| string[]) => void`| —          | Called on selection change.                    |
+| `multiple`    | `boolean`                            | `false`    | Enables multi-select with chips.               |
+| `placeholder` | `string`                             | `'Select…'`| Text shown when nothing is selected.           |
+| `label`       | `string`                             | —          | Label above the trigger.                       |
+| `error`       | `string`                             | —          | Error message; triggers error styling.         |
+| `size`        | `'sm' \| 'md' \| 'lg'`              | `'md'`     | Controls trigger height and font size.         |
+| `disabled`    | `boolean`                            | `false`    | Disables the select.                           |
+| `className`   | `string`                             | —          | Merged via `tailwind-merge`.                   |
+
+```tsx
+<Select
+  label="Country"
+  options={[
+    { value: 'us', label: 'United States' },
+    { value: 'gb', label: 'United Kingdom' },
+  ]}
+  onChange={(v) => setCountry(v as string)}
+/>
+```
+
+---
+
+### Accordion
+
+Animated disclosure panels with single or multiple open behaviour.
+
+#### Props — `<Accordion>`
+
+| Prop          | Type                        | Default    | Description                                          |
+| ------------- | --------------------------- | ---------- | ---------------------------------------------------- |
+| `type`        | `'single' \| 'multiple'`   | `'single'` | Whether multiple panels can be open at once.         |
+| `defaultValue`| `string \| string[]`        | —          | Panel(s) open on initial render.                     |
+| `value`       | `string \| string[]`        | —          | Controlled open panel(s).                            |
+| `onChange`    | `(v: string \| string[]) => void` | —    | Called when open panels change.                      |
+| `className`   | `string`                    | —          | Merged via `tailwind-merge`.                         |
+
+#### Props — `<AccordionItem>`
+
+| Prop        | Type      | Default | Description                         |
+| ----------- | --------- | ------- | ----------------------------------- |
+| `value`     | `string`  | —       | Unique identifier for this panel.   |
+| `title`     | `string`  | —       | Trigger label.                      |
+| `disabled`  | `boolean` | `false` | Prevents opening.                   |
+| `className` | `string`  | —       | Merged via `tailwind-merge`.        |
+
+```tsx
+<Accordion type="single" defaultValue="item-1">
+  <AccordionItem value="item-1" title="What is glass morphism?">
+    A design style using transparency, blur, and thin borders.
+  </AccordionItem>
+  <AccordionItem value="item-2" title="Is this accessible?">
+    Yes — uses ARIA expanded/controls/region attributes.
+  </AccordionItem>
+</Accordion>
+```
+
+---
+
+### Alert
+
+Inline contextual message with optional dismiss action.
+
+#### Props
+
+| Prop          | Type                                               | Default   | Description                          |
+| ------------- | -------------------------------------------------- | --------- | ------------------------------------ |
+| `variant`     | `'info' \| 'success' \| 'warning' \| 'danger'`    | `'info'`  | Color intent.                        |
+| `title`       | `string`                                           | —         | Bold heading above the body.         |
+| `dismissible` | `boolean`                                          | `false`   | Adds an ✕ close button.              |
+| `onDismiss`   | `() => void`                                       | —         | Called when close button is clicked. |
+| `className`   | `string`                                           | —         | Merged via `tailwind-merge`.         |
+
+```tsx
+<Alert variant="success" title="Saved!" dismissible onDismiss={() => setShow(false)}>
+  Your changes have been published.
+</Alert>
+```
+
+---
+
+### Toast
+
+Animated notification that auto-dismisses. Render `<ToastContainer>` once at the app root; call `useToast()` to fire toasts from anywhere.
+
+#### `useToast()` API
+
+| Method  | Signature                                                                    | Description                         |
+| ------- | ---------------------------------------------------------------------------- | ----------------------------------- |
+| `toast` | `(message: string, options?: ToastOptions) => void`                          | Show a toast.                       |
+
+#### `ToastOptions`
+
+| Prop        | Type                                            | Default    | Description                        |
+| ----------- | ----------------------------------------------- | ---------- | ---------------------------------- |
+| `variant`   | `'info' \| 'success' \| 'warning' \| 'danger'` | `'info'`   | Color intent.                      |
+| `duration`  | `number`                                        | `3000`     | Auto-dismiss delay in ms.          |
+| `position`  | `'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left'` | `'top-right'` | Screen position. |
+
+```tsx
+// main.tsx
+<ToastContainer />
+
+// Anywhere in your app
+const { toast } = useToast();
+toast('File uploaded!', { variant: 'success', duration: 4000 });
+```
+
+---
+
+### Avatar
+
+User avatar with image, initials fallback, status indicator, and group stacking.
+
+#### Props — `<Avatar>`
+
+| Prop        | Type                                  | Default  | Description                                     |
+| ----------- | ------------------------------------- | -------- | ----------------------------------------------- |
+| `src`       | `string`                              | —        | Image URL.                                      |
+| `alt`       | `string`                              | —        | Alt text / initials source.                     |
+| `size`      | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Controls diameter.                              |
+| `status`    | `'online' \| 'offline' \| 'away' \| 'busy'` | — | Renders a coloured dot badge.              |
+| `className` | `string`                              | —        | Merged via `tailwind-merge`.                    |
+
+#### Props — `<AvatarGroup>`
+
+| Prop      | Type      | Default | Description                              |
+| --------- | --------- | ------- | ---------------------------------------- |
+| `max`     | `number`  | —       | Maximum avatars shown before "+N" label. |
+| `size`    | same as Avatar `size` | `'md'` | Applied to all children.    |
+
+```tsx
+<Avatar src="/alice.jpg" alt="Alice" status="online" />
+
+<AvatarGroup max={3}>
+  <Avatar src="/alice.jpg" alt="Alice" />
+  <Avatar src="/bob.jpg"   alt="Bob" />
+  <Avatar src="/carol.jpg" alt="Carol" />
+  <Avatar alt="Dave" />
+</AvatarGroup>
+```
+
+---
+
+### Modal
+
+Portal-based dialog with animated backdrop, accessible focus trap, and slot-based layout.
+
+#### Props
+
+| Prop          | Type                                | Default | Description                                      |
+| ------------- | ----------------------------------- | ------- | ------------------------------------------------ |
+| `open`        | `boolean`                           | —       | Controls visibility.                             |
+| `onClose`     | `() => void`                        | —       | Called on backdrop click or Escape.              |
+| `size`        | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'` | Max-width of the dialog panel.         |
+| `closeOnOverlayClick` | `boolean`                   | `true`  | Click backdrop to dismiss.                       |
+| `showCloseButton`     | `boolean`                   | `true`  | Renders an ✕ in the top-right corner.            |
+| `className`   | `string`                            | —       | Merged via `tailwind-merge`.                     |
+
+Sub-components: `<ModalHeader>`, `<ModalBody>`, `<ModalFooter>`.
+
+```tsx
+<Modal open={open} onClose={() => setOpen(false)} size="md">
+  <ModalHeader>Confirm deletion</ModalHeader>
+  <ModalBody>This action cannot be undone.</ModalBody>
+  <ModalFooter>
+    <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
+    <Button variant="primary" onClick={handleDelete}>Delete</Button>
+  </ModalFooter>
+</Modal>
+```
+
+---
+
+### Breadcrumb
+
+Navigation trail showing the current page's position in the hierarchy.
+
+#### Props — `<Breadcrumb>`
+
+| Prop        | Type        | Default | Description                                   |
+| ----------- | ----------- | ------- | --------------------------------------------- |
+| `separator` | `ReactNode` | `'/'`   | Custom separator between items.               |
+| `maxItems`  | `number`    | —       | Collapses middle items into `…` when exceeded.|
+| `className` | `string`    | —       | Merged via `tailwind-merge`.                  |
+
+#### Props — `<BreadcrumbItem>`
+
+| Prop        | Type        | Default | Description                                          |
+| ----------- | ----------- | ------- | ---------------------------------------------------- |
+| `href`      | `string`    | —       | Makes the item a link. Omit for the current page.    |
+| `icon`      | `ReactNode` | —       | Icon rendered before the label.                      |
+| `isCurrent` | `boolean`   | `false` | Marks active item (adds `aria-current="page"`).      |
+
+```tsx
+<Breadcrumb separator={<ChevronRight className="h-3.5 w-3.5" />}>
+  <BreadcrumbItem href="/" icon={<Home className="h-3.5 w-3.5" />}>Home</BreadcrumbItem>
+  <BreadcrumbItem href="/products">Products</BreadcrumbItem>
+  <BreadcrumbItem isCurrent>Sneakers</BreadcrumbItem>
+</Breadcrumb>
+```
+
+---
+
+### Calendar
+
+Full-featured date picker with single, range, and multi-select modes. Supports public holidays, weekend highlighting, and event dots with tooltip previews.
+
+#### Props
+
+| Prop             | Type                    | Default | Description                                                    |
+| ---------------- | ----------------------- | ------- | -------------------------------------------------------------- |
+| `mode`           | `'single' \| 'range' \| 'multi'` | `'single'` | Selection mode.                                  |
+| `value`          | `Date \| null`          | —       | Controlled value (single mode).                                |
+| `defaultValue`   | `Date`                  | —       | Uncontrolled initial value (single mode).                      |
+| `onChange`       | `(date: Date \| null) => void` | — | Called when the selected date changes (single/multi).     |
+| `range`          | `DateRange`             | —       | Controlled range `{ start, end }`.                             |
+| `defaultRange`   | `DateRange`             | —       | Uncontrolled initial range.                                    |
+| `onRangeChange`  | `(range: DateRange) => void` | — | Called when range changes.                                |
+| `minDate`        | `Date`                  | —       | Dates before this are disabled.                                |
+| `maxDate`        | `Date`                  | —       | Dates after this are disabled.                                 |
+| `disabledDates`  | `Date[]`                | —       | Array of individual dates to disable.                          |
+| `holidays`       | `Holiday[]`             | —       | `{ date, label? }` — renders dates in rose/red.               |
+| `highlightWeekends` | `boolean`            | `false` | Colours Saturday and Sunday rose/red.                          |
+| `events`         | `CalendarEvent[]`       | —       | `{ date, label, color? }` — renders coloured dots on dates.    |
+| `firstDayOfWeek` | `0 \| 1`               | `1`     | `0` = Sunday, `1` = Monday.                                    |
+| `className`      | `string`                | —       | Merged via `tailwind-merge`.                                   |
+
+#### Supporting types
+
+```ts
+export interface Holiday {
+  date: Date;
+  label?: string;   // shown in the tooltip on hover
+}
+
+export type CalendarEventColor = 'indigo' | 'emerald' | 'amber' | 'rose' | 'violet' | 'sky';
+
+export interface CalendarEvent {
+  date: Date;
+  label: string;
+  color?: CalendarEventColor;  // default: 'indigo'
+}
+```
+
+#### Examples
+
+```tsx
+// Basic single date picker
+<Calendar mode="single" onChange={(d) => setDate(d)} />
+
+// Date range picker
+<Calendar mode="range" onRangeChange={(r) => setRange(r)} />
+
+// With public holidays and weekend highlighting
+<Calendar
+  holidays={[
+    { date: new Date(2025, 0, 1), label: "New Year's Day" },
+    { date: new Date(2025, 11, 25), label: 'Christmas Day' },
+  ]}
+  highlightWeekends
+/>
+
+// With events (coloured dots + hover tooltip)
+<Calendar
+  events={[
+    { date: new Date(2025, 4, 15), label: 'Team standup', color: 'indigo' },
+    { date: new Date(2025, 4, 20), label: 'Deadline', color: 'rose' },
+  ]}
+/>
+```
+
+---
+
+### FileInput
+
+File upload control with a glass dropzone or a compact button variant. Supports validation, multiple files, and size limits.
+
+#### Props
+
+| Prop            | Type                                  | Default       | Description                                             |
+| --------------- | ------------------------------------- | ------------- | ------------------------------------------------------- |
+| `variant`       | `'dropzone' \| 'button'`              | `'dropzone'`  | Visual presentation.                                    |
+| `multiple`      | `boolean`                             | `false`       | Allow selecting multiple files.                         |
+| `accept`        | `string`                              | —             | Accepted MIME types or extensions (e.g. `'image/*'`).  |
+| `maxSize`       | `number`                              | —             | Max file size in bytes.                                 |
+| `maxFiles`      | `number`                              | —             | Max number of files when `multiple` is true.            |
+| `onFilesChange` | `(files: File[]) => void`             | —             | Called whenever the file selection changes.             |
+| `onError`       | `(errors: FileValidationError[]) => void` | —         | Called when validation fails.                           |
+| `size`          | `'sm' \| 'md' \| 'lg'`               | `'md'`        | Controls layout dimensions.                             |
+| `disabled`      | `boolean`                             | `false`       | Disables all interaction.                               |
+| `error`         | `string`                              | —             | External error message.                                 |
+| `className`     | `string`                              | —             | Merged via `tailwind-merge`.                            |
+
+```tsx
+// Dropzone (drag-and-drop area)
+<FileInput
+  variant="dropzone"
+  multiple
+  accept="image/*"
+  maxSize={5 * 1024 * 1024}
+  onFilesChange={(files) => setFiles(files)}
+/>
+
+// Button variant ("Choose File / No file chosen")
+<FileInput
+  variant="button"
+  accept=".pdf,.docx"
+  onFilesChange={(files) => setDocument(files[0])}
+/>
+```
+
+---
+
+### Tooltip
+
+Portal-based tooltip with hover and click triggers, four placements, configurable delay, and support for rich `ReactNode` content.
+
+#### Props
+
+| Prop        | Type                                     | Default   | Description                                               |
+| ----------- | ---------------------------------------- | --------- | --------------------------------------------------------- |
+| `content`   | `ReactNode`                              | —         | Tooltip body — plain text or JSX.                         |
+| `children`  | `ReactNode`                              | —         | The element that triggers the tooltip.                    |
+| `placement` | `'top' \| 'bottom' \| 'left' \| 'right'`| `'top'`   | Which side the bubble appears on.                         |
+| `trigger`   | `'hover' \| 'click'`                     | `'hover'` | Interaction model.                                        |
+| `delay`     | `number`                                 | `0`       | Open delay in ms (hover only).                            |
+| `disabled`  | `boolean`                                | `false`   | Prevents the tooltip from appearing.                      |
+| `className` | `string`                                 | —         | Merged onto the tooltip bubble via `tailwind-merge`.      |
+
+The tooltip renders via `ReactDOM.createPortal` to avoid stacking context issues. Position is calculated from `getBoundingClientRect()` at open time — no scroll offset adjustments needed.
+
+```tsx
+<Tooltip content="Copy to clipboard" placement="top">
+  <button>Copy</button>
+</Tooltip>
+
+// Click trigger
+<Tooltip content="Link copied!" trigger="click" placement="bottom">
+  <Button variant="ghost">Share</Button>
+</Tooltip>
+
+// Rich content
+<Tooltip
+  content={
+    <div className="flex flex-col gap-1">
+      <span className="font-medium">Alice Chen</span>
+      <span className="text-slate-400">Product Designer</span>
+    </div>
+  }
+>
+  <Avatar src="/alice.jpg" alt="Alice" />
+</Tooltip>
 ```
 
 ---
@@ -204,12 +597,11 @@ The spinner overlays the button content absolutely. The button width is preserve
 
 ### `cn(...inputs)`
 
-Combines `clsx` and `tailwind-merge`. Use it whenever you need to conditionally compose Tailwind class strings and want the last conflicting class to win.
+Combines `clsx` and `tailwind-merge`. The last conflicting Tailwind class always wins.
 
 ```tsx
 import { cn } from 'kayv-glass-ui';
 
-// Conditional classes — no risk of duplicating layout properties
 const cls = cn(
   'rounded-xl bg-white/40 backdrop-blur-sm',
   isActive   && 'ring-2 ring-indigo-500',
@@ -221,12 +613,12 @@ const cls = cn(
 
 ## Theme System
 
-`src/theme/index.ts` exports the `ThemeConfig` interface and a `defaultTheme` object. This is a placeholder for a future DaisyUI-style Tailwind preset/plugin that will allow consumers to configure the library's visual language (border radius, blur intensity, and light/dark variant) from their own `tailwind.config.js`.
+`src/theme/index.ts` exports `ThemeConfig` and `defaultTheme` as placeholders for a future Tailwind preset/plugin that will let consumers configure border radius, blur intensity, and color palette from their own `tailwind.config.js`.
 
 ```ts
 import type { ThemeConfig } from 'kayv-glass-ui';
 
-// This API is not active yet — exports exist for forward compatibility
+// Not active yet — forward-compatible API
 const theme: ThemeConfig = {
   variant: 'glass',
   radius: 'lg',
@@ -241,39 +633,67 @@ const theme: ThemeConfig = {
 ```
 kayv-glass-ui/
 │
-├── src/                          # Library source — this is what gets published
-│   ├── index.ts                  # Public API barrel — re-exports everything
+├── src/                              # Library source — published to npm
+│   ├── index.ts                      # Public API barrel
 │   ├── components/
-│   │   ├── index.ts              # Component barrel
-│   │   └── Button/
-│   │       ├── Button.types.ts   # ButtonProps, ButtonVariant, ButtonSize
-│   │       ├── Button.styles.ts  # Class maps — base, variant, size, spinner
-│   │       ├── Button.tsx        # React component (forwardRef)
-│   │       └── index.ts          # Re-exports component + types
+│   │   ├── index.ts                  # Component barrel (exports all 14)
+│   │   ├── Button/
+│   │   ├── Badge/
+│   │   ├── Card/
+│   │   ├── Input/
+│   │   ├── Select/
+│   │   ├── Accordion/
+│   │   ├── Alert/
+│   │   ├── Toast/
+│   │   ├── Avatar/
+│   │   ├── Modal/
+│   │   ├── Breadcrumb/
+│   │   ├── Calendar/
+│   │   ├── FileInput/
+│   │   └── Tooltip/
+│   │       ├── Tooltip.types.ts      # Four-file pattern: types → styles → impl → index
+│   │       ├── Tooltip.styles.ts
+│   │       ├── Tooltip.tsx
+│   │       └── index.ts
 │   ├── utils/
-│   │   └── cn.ts                 # clsx + tailwind-merge helper
+│   │   └── cn.ts                     # clsx + tailwind-merge helper
 │   └── theme/
-│       └── index.ts              # ThemeConfig types + defaultTheme stub
+│       └── index.ts                  # ThemeConfig stub
 │
-├── playground/                   # Isolated Vite app — never published
-│   ├── src/
-│   │   ├── App.tsx               # BrowserRouter + route definitions
-│   │   ├── components/
-│   │   │   └── Layout.tsx        # Shell: glass header, sidebar, dark mode toggle
-│   │   └── pages/
-│   │       ├── Overview.tsx      # Dashboard landing page
-│   │       ├── ComingSoon.tsx    # Placeholder for unbuilt component routes
-│   │       └── components/
-│   │           └── ButtonPage.tsx # Full Button documentation page
-│   ├── tailwind.config.js        # Scans both playground/src and ../src/components
-│   └── vite.config.ts            # Path alias: kayv-glass-ui → ../src/index.ts
+├── playground/                       # Vite documentation app — never published
+│   ├── public/
+│   │   ├── favicon.svg               # 32×32 K-mark icon
+│   │   └── icon.svg                  # 100×100 full-detail app icon (PWA / OG)
+│   └── src/
+│       ├── assets/
+│       │   └── logo.svg              # 224×52 horizontal wordmark lockup
+│       ├── App.tsx                   # BrowserRouter + all 14 component routes
+│       ├── components/
+│       │   └── Layout.tsx            # Shell: header, sidebar nav, dark mode toggle
+│       └── pages/
+│           ├── Overview.tsx          # Dashboard landing with component grid
+│           └── components/
+│               ├── ButtonPage.tsx
+│               ├── BadgePage.tsx
+│               ├── CardPage.tsx
+│               ├── InputPage.tsx
+│               ├── SelectPage.tsx
+│               ├── AccordionPage.tsx
+│               ├── AlertPage.tsx
+│               ├── ToastPage.tsx
+│               ├── AvatarPage.tsx
+│               ├── ModalPage.tsx
+│               ├── BreadcrumbPage.tsx
+│               ├── CalendarPage.tsx
+│               ├── FileInputPage.tsx
+│               └── TooltipPage.tsx
 │
-├── tsup.config.ts                # Build: ESM + CJS, dts, splitting, minify
-├── tsconfig.json                 # Strict TypeScript config (noEmit — tsup handles emit)
+├── tsup.config.ts                    # ESM + CJS, dts, splitting, minify
+├── tsconfig.json                     # Strict TS (exactOptionalPropertyTypes: true)
 └── package.json
 ```
 
-Every new component follows the same four-file pattern inside `src/components/`. The playground imports from source directly — no build step needed during development.
+Every component follows the same **four-file pattern**: `Component.types.ts` → `Component.styles.ts` → `Component.tsx` → `index.ts`. The playground imports from `../../src` via a Vite path alias — no build step needed during development.
 
 ---
 
@@ -292,22 +712,19 @@ npm install --prefix playground
 ### Daily workflow
 
 ```bash
-# Start the playground (runs Vite on http://localhost:5173)
+# Start the playground (http://localhost:5173)
 npm run playground
 
-# In a second terminal — watch-mode build of the library (optional)
-# Useful if you are testing the built output rather than the source alias
-npm run dev
-
-# Type-check the library source without emitting files
+# Type-check without emitting
 npm run type-check
-```
 
-The playground imports from `../../src` via a Vite path alias, so changes to library source files are reflected immediately in the browser without running a build.
+# Watch-mode library build (optional — only needed to test built output)
+npm run dev
+```
 
 ### Dark mode
 
-The playground ships with a light/dark toggle in the header. The preference is persisted in `localStorage` under the key `theme`. The toggle applies a `dark` class to `<html>` and all components use Tailwind's `dark:` variant prefix.
+The playground ships with a light/dark toggle persisted to `localStorage` under the key `theme`. All components use Tailwind's `dark:` prefix variant.
 
 ---
 
@@ -319,150 +736,141 @@ npm run build
 
 **tsup** processes `src/index.ts` and outputs:
 
-| File | Format | Purpose |
-|---|---|---|
-| `dist/index.mjs` | ESM | Vite, Next.js App Router, modern bundlers |
-| `dist/index.js` | CJS | Webpack 4, Jest, older toolchains |
-| `dist/index.d.ts` | CJS types | TypeScript consumers using `require()` |
-| `dist/index.d.mts` | ESM types | TypeScript consumers using `import` |
+| File              | Format    | Purpose                                    |
+| ----------------- | --------- | ------------------------------------------ |
+| `dist/index.mjs`  | ESM       | Vite, Next.js App Router, modern bundlers  |
+| `dist/index.js`   | CJS       | Webpack 4, Jest, older toolchains          |
+| `dist/index.d.ts` | CJS types | TypeScript consumers using `require()`     |
+| `dist/index.d.mts`| ESM types | TypeScript consumers using `import`        |
 
-Each output file is prefixed with `"use client"` so the library is compatible with React Server Components without requiring consumers to add their own directives.
-
-Code splitting is enabled — if a future consumer imports only `Button`, only the Button chunk is included in their bundle.
-
-To verify the build output before publishing:
-
-```bash
-npm run build
-ls -lh dist/
-```
+Each output is prefixed with `"use client"` for RSC compatibility. Code splitting is enabled — importing only `Button` ships only the Button chunk.
 
 ---
 
 ## Adding a New Component
 
-Follow the four-file pattern that `Button` establishes. Every component lives in its own folder under `src/components/`.
+Follow the four-file pattern. Every component lives in its own folder under `src/components/`.
 
-### 1 — Create the component folder
+### 1 — Create the folder
 
 ```
-src/components/Badge/
-├── Badge.types.ts
-├── Badge.styles.ts
-├── Badge.tsx
+src/components/Spinner/
+├── Spinner.types.ts
+├── Spinner.styles.ts
+├── Spinner.tsx
 └── index.ts
 ```
 
-### 2 — Define types first (`Badge.types.ts`)
+### 2 — Define types first
 
 ```ts
+// Spinner.types.ts
 import React from 'react';
 
-export type BadgeVariant = 'default' | 'success' | 'warning' | 'danger';
+export type SpinnerSize = 'sm' | 'md' | 'lg';
 
-export interface BadgeProps extends React.ComponentPropsWithoutRef<'span'> {
-  variant?: BadgeVariant;
+export interface SpinnerProps extends React.ComponentPropsWithoutRef<'span'> {
+  size?: SpinnerSize;
 }
 ```
 
-Start with the public interface before writing any implementation. If the props feel awkward to define, the API design needs more thought.
+Start with the public interface — if the props feel awkward to define, the API needs more thought.
 
-### 3 — Extract class maps (`Badge.styles.ts`)
+### 3 — Extract class maps
 
 ```ts
-import type { BadgeVariant } from './Badge.types';
+// Spinner.styles.ts
+import type { SpinnerSize } from './Spinner.types';
 
-export const badgeBase = 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium';
+export const spinnerBase = 'inline-block rounded-full border-2 border-current border-t-transparent animate-spin';
 
-export const variantStyles: Record<BadgeVariant, string> = {
-  default: 'bg-slate-100/60 text-slate-600 border border-slate-200/60',
-  success: 'bg-emerald-50 text-emerald-700 border border-emerald-200/60',
-  warning: 'bg-amber-50 text-amber-700 border border-amber-200/60',
-  danger:  'bg-rose-50 text-rose-700 border border-rose-200/60',
+export const sizeStyles: Record<SpinnerSize, string> = {
+  sm: 'h-3.5 w-3.5',
+  md: 'h-5 w-5',
+  lg: 'h-7 w-7',
 };
 ```
 
-Keep style strings in their own file. The component file should not contain class string literals — only logic.
+Keep all class strings in the styles file — the component file should contain only logic.
 
-### 4 — Build the component (`Badge.tsx`)
+### 4 — Build the component
 
 ```tsx
+// Spinner.tsx
 import React from 'react';
 import { cn } from '../../utils/cn';
-import { badgeBase, variantStyles } from './Badge.styles';
-import type { BadgeProps } from './Badge.types';
+import { spinnerBase, sizeStyles } from './Spinner.styles';
+import type { SpinnerProps } from './Spinner.types';
 
-export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, variant = 'default', children, ...props }, ref) => (
+export const Spinner = React.forwardRef<HTMLSpanElement, SpinnerProps>(
+  ({ className, size = 'md', ...props }, ref) => (
     <span
       ref={ref}
-      className={cn(badgeBase, variantStyles[variant], className)}
+      role="status"
+      aria-label="Loading"
+      className={cn(spinnerBase, sizeStyles[size], className)}
       {...props}
-    >
-      {children}
-    </span>
+    />
   )
 );
 
-Badge.displayName = 'Badge';
+Spinner.displayName = 'Spinner';
 ```
 
 ### 5 — Wire up the barrels
 
 ```ts
-// src/components/Badge/index.ts
-export { Badge } from './Badge';
-export type { BadgeProps, BadgeVariant } from './Badge.types';
+// src/components/Spinner/index.ts
+export { Spinner } from './Spinner';
+export type { SpinnerProps, SpinnerSize } from './Spinner.types';
 
 // src/components/index.ts — add one line
-export * from './Badge';
+export * from './Spinner';
 ```
 
-`src/index.ts` already re-exports everything from `src/components/index.ts`, so no changes are needed there.
+`src/index.ts` re-exports everything from `src/components/index.ts` — no changes needed there.
 
-### 6 — Add a documentation page to the playground
+### 6 — Add a playground page
 
-Create `playground/src/pages/components/BadgePage.tsx` and add the route to `playground/src/App.tsx`:
-
-```tsx
-<Route path="components/badge" element={<BadgePage />} />
-```
-
-Update the `navigation` array in `Layout.tsx` to remove the `soon: true` flag from the Badge entry so it becomes a live link.
+Create `playground/src/pages/components/SpinnerPage.tsx` following the ButtonPage pattern (preview cards, code tabs, props table), then add the route to `playground/src/App.tsx` and the nav entry to `playground/src/components/Layout.tsx`.
 
 ---
 
 ## Roadmap
 
 **v0.1 — Foundation** _(current)_
-- [x] Build pipeline (tsup, ESM + CJS, dts)
-- [x] Strict TypeScript configuration
+
+- [x] Build pipeline (tsup, ESM + CJS, dts, code splitting)
+- [x] Strict TypeScript (`exactOptionalPropertyTypes: true`)
 - [x] `cn()` utility (clsx + tailwind-merge)
-- [x] Theme system stubs
-- [x] Button component (variants, sizes, loading, forwardRef)
-- [x] Playground with routing, dark mode, and documentation pages
+- [x] Dark mode via `localStorage` + `dark:` Tailwind prefix
+- [x] 14 components: Button, Badge, Card, Input, Select, Accordion, Alert, Toast, Avatar, Modal, Breadcrumb, Calendar, FileInput, Tooltip
+- [x] Calendar: single / range / multi modes, minDate/maxDate, disabledDates
+- [x] Calendar: public holidays (rose colour + tooltip label)
+- [x] Calendar: optional weekend highlighting
+- [x] Calendar: event dots with per-day colour and hover tooltips
+- [x] FileInput: dropzone and button variants, multi-file, size/type validation
+- [x] Tooltip: hover and click triggers, four placements, portal-based
+- [x] Playground with routing, sidebar search, and full documentation pages for all 14 components
+- [x] Brand assets: favicon, app icon, horizontal wordmark lockup
 
-**v0.2 — Core set**
-- [ ] Badge
-- [ ] Card
-- [ ] Input
-- [ ] Select
+**v0.2 — DX & accessibility**
 
-**v0.3 — Feedback layer**
-- [ ] Alert
-- [ ] Toast / Sonner integration
-- [ ] Spinner (standalone)
+- [ ] Standalone `Spinner` component
+- [ ] `Drawer` (slide-in panel, portal-based)
+- [ ] Full WCAG 2.1 AA audit (focus management, ARIA, colour contrast)
+- [ ] Keyboard navigation pass for Calendar and Select
 
-**v0.4 — Layout & disclosure**
-- [ ] Accordion
-- [ ] Modal / Dialog
-- [ ] Drawer
+**v0.3 — Theme system**
+
+- [ ] Tailwind preset/plugin (`ThemeConfig` becomes active)
+- [ ] CSS custom property tokens for radius, blur, and brand colour
 
 **v1.0 — Stable release**
-- [ ] Tailwind preset/plugin (ThemeConfig becomes active)
-- [ ] Full WCAG 2.1 AA audit
-- [ ] Storybook or equivalent static documentation site
+
+- [ ] Static documentation site (Storybook or custom)
 - [ ] Automated visual regression tests
+- [ ] Published to npm
 
 ---
 
