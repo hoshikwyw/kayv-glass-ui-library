@@ -32,6 +32,12 @@ const navigation: NavSection[] = [
       { label: 'Select', path: '/components/select' },
     ],
   },
+  {
+    category: 'Media',
+    items: [
+      { label: 'Avatar', path: '/components/avatar' },
+    ],
+  },
 ];
 
 export default function Layout() {
