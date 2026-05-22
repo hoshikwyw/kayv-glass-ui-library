@@ -21,7 +21,7 @@ const navigation: NavSection[] = [
   {
     category: 'Feedback',
     items: [
-      { label: 'Alert', path: '/components/alert', soon: true },
+      { label: 'Alert', path: '/components/alert' },
       { label: 'Toast', path: '/components/toast' },
     ],
   },

@@ -74,7 +74,7 @@ const components: {
     path: '/components/alert',
     desc: 'Contextual feedback messages with icon and dismiss support.',
     icon: AlertCircle,
-    ready: false,
+    ready: true,
   },
   {
     label: 'Toast',
