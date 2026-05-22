@@ -60,7 +60,7 @@ const components: {
     path: '/components/input',
     desc: 'Text input with glass styling and validation states.',
     icon: TextCursor,
-    ready: false,
+    ready: true,
   },
   {
     label: 'Accordion',

@@ -8,6 +8,7 @@ import ToastPage from './pages/components/ToastPage';
 import CardPage from './pages/components/CardPage';
 import AccordionPage from './pages/components/AccordionPage';
 import AlertPage from './pages/components/AlertPage';
+import InputPage from './pages/components/InputPage';
 import ComingSoon from './pages/ComingSoon';
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="components/card" element={<CardPage />} />
           <Route path="components/accordion" element={<AccordionPage />} />
           <Route path="components/alert" element={<AlertPage />} />
+          <Route path="components/input" element={<InputPage />} />
           <Route path="components/:slug" element={<ComingSoon />} />
         </Route>
       </Routes>

@@ -28,7 +28,7 @@ const navigation: NavSection[] = [
   {
     category: 'Inputs',
     items: [
-      { label: 'Input', path: '/components/input', soon: true },
+      { label: 'Input', path: '/components/input' },
       { label: 'Select', path: '/components/select', soon: true },
     ],
   },
