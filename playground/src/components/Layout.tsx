@@ -115,6 +115,12 @@ const navigation: NavSection[] = [
       { label: 'Calendar', path: '/components/calendar' },
     ],
   },
+  {
+    category: 'Visualization',
+    items: [
+      { label: 'Globe', path: '/components/globe' },
+    ],
+  },
 ];
 
 export default function Layout() {

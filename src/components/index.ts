@@ -18,3 +18,4 @@ export * from './Drawer';
 export * from './Tabs';
 export * from './Progress';
 export * from './Checkbox';
+export * from './Globe';

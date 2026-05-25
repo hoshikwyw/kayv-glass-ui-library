@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import {
   Zap, Package, FileCode,
   MousePointerClick, Tag, Layers, TextCursor,
-  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, Menu, CalendarDays, Upload, MessageSquare, PanelBottom, PanelRight, LayoutList, GanttChartSquare, CheckSquare,
+  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, Menu, CalendarDays, Upload, MessageSquare, PanelBottom, PanelRight, LayoutList, GanttChartSquare, CheckSquare, Globe2,
   ArrowRight, CheckCircle2,
 } from 'lucide-react';
 import type { ElementType } from 'react';
@@ -172,6 +172,13 @@ const components: {
     path: '/components/footer',
     desc: 'Compound glass footer with brand, link columns, divider, and bottom bar.',
     icon: PanelBottom,
+    ready: true,
+  },
+  {
+    label: 'Globe',
+    path: '/components/globe',
+    desc: 'Interactive 3D WebGL globe with drag-to-rotate, inertia, and city markers.',
+    icon: Globe2,
     ready: true,
   },
 ];
