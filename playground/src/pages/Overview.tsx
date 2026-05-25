@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import {
   Zap, Package, FileCode,
   MousePointerClick, Tag, Layers, TextCursor,
-  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, CalendarDays, Upload, MessageSquare,
+  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, Menu, CalendarDays, Upload, MessageSquare, PanelBottom,
   ArrowRight, CheckCircle2,
 } from 'lucide-react';
 import type { ElementType } from 'react';
@@ -105,6 +105,13 @@ const components: {
     ready: true,
   },
   {
+    label: 'Navbar',
+    path: '/components/navbar',
+    desc: 'Compound navbar with brand, content slots, mobile menu toggle, and slide-down drawer.',
+    icon: Menu,
+    ready: true,
+  },
+  {
     label: 'Breadcrumb',
     path: '/components/breadcrumb',
     desc: 'Navigation trail with icons, truncation, and custom separators.',
@@ -130,6 +137,13 @@ const components: {
     path: '/components/tooltip',
     desc: 'Portal-based tooltip with glass styling, directional caret, and hover or click trigger.',
     icon: MessageSquare,
+    ready: true,
+  },
+  {
+    label: 'Footer',
+    path: '/components/footer',
+    desc: 'Compound glass footer with brand, link columns, divider, and bottom bar.',
+    icon: PanelBottom,
     ready: true,
   },
 ];

@@ -102,6 +102,7 @@ const navigation: NavSection[] = [
     items: [
       { label: 'Navbar', path: '/components/navbar' },
       { label: 'Breadcrumb', path: '/components/breadcrumb' },
+      { label: 'Footer', path: '/components/footer' },
     ],
   },
   {
