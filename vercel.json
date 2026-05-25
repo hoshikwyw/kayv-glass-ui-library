@@ -1,0 +1,6 @@
+{
+  "installCommand": "npm install",
+  "buildCommand": "npm install --prefix playground && npm run build --prefix playground",
+  "outputDirectory": "playground/dist",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
