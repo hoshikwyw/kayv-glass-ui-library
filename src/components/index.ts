@@ -20,3 +20,4 @@ export * from './Progress';
 export * from './Checkbox';
 export * from './Globe';
 export * from './MenuBar';
+export * from './Confetti';

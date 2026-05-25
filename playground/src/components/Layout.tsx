@@ -122,6 +122,12 @@ const navigation: NavSection[] = [
       { label: 'Globe', path: '/components/globe' },
     ],
   },
+  {
+    category: 'Effects',
+    items: [
+      { label: 'Confetti', path: '/components/confetti' },
+    ],
+  },
 ];
 
 export default function Layout() {

@@ -24,6 +24,7 @@ import ProgressPage from './pages/components/ProgressPage';
 import CheckboxPage from './pages/components/CheckboxPage';
 import GlobePage from './pages/components/GlobePage';
 import MenuBarPage from './pages/components/MenuBarPage';
+import ConfettiPage from './pages/components/ConfettiPage';
 import ThemingPage from './pages/ThemingPage';
 import ComingSoon from './pages/ComingSoon';
 
@@ -57,6 +58,7 @@ export default function App() {
           <Route path="components/checkbox" element={<CheckboxPage />} />
           <Route path="components/globe" element={<GlobePage />} />
           <Route path="components/menubar" element={<MenuBarPage />} />
+          <Route path="components/confetti" element={<ConfettiPage />} />
           <Route path="theming" element={<ThemingPage />} />
           <Route path="components/:slug" element={<ComingSoon />} />
         </Route>
