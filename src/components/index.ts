@@ -15,3 +15,4 @@ export * from './Tooltip';
 export * from './Navbar';
 export * from './Footer';
 export * from './Drawer';
+export * from './Tabs';

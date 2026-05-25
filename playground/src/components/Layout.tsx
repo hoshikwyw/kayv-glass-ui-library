@@ -62,6 +62,7 @@ const navigation: NavSection[] = [
       { label: 'Badge', path: '/components/badge' },
       { label: 'Card', path: '/components/card' },
       { label: 'Accordion', path: '/components/accordion' },
+      { label: 'Tabs', path: '/components/tabs' },
     ],
   },
   {

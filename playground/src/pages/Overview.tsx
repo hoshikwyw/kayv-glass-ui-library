@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import {
   Zap, Package, FileCode,
   MousePointerClick, Tag, Layers, TextCursor,
-  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, Menu, CalendarDays, Upload, MessageSquare, PanelBottom, PanelRight,
+  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, Menu, CalendarDays, Upload, MessageSquare, PanelBottom, PanelRight, LayoutList,
   ArrowRight, CheckCircle2,
 } from 'lucide-react';
 import type { ElementType } from 'react';
@@ -67,6 +67,13 @@ const components: {
     path: '/components/accordion',
     desc: 'Animated disclosure panels for collapsible content.',
     icon: AlignJustify,
+    ready: true,
+  },
+  {
+    label: 'Tabs',
+    path: '/components/tabs',
+    desc: 'Compound tabs with pills, underline, and line variants. Keyboard navigable.',
+    icon: LayoutList,
     ready: true,
   },
   {
