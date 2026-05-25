@@ -25,6 +25,7 @@ import CheckboxPage from './pages/components/CheckboxPage';
 import GlobePage from './pages/components/GlobePage';
 import MenuBarPage from './pages/components/MenuBarPage';
 import ConfettiPage from './pages/components/ConfettiPage';
+import DocsPage from './pages/DocsPage';
 import ThemingPage from './pages/ThemingPage';
 import ComingSoon from './pages/ComingSoon';
 
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/overview" replace />} />
           <Route path="overview" element={<Overview />} />
+          <Route path="docs" element={<DocsPage />} />
           <Route path="components/button" element={<ButtonPage />} />
           <Route path="components/badge" element={<BadgePage />} />
           <Route path="components/toast" element={<ToastPage />} />

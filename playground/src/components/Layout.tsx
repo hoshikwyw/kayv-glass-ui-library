@@ -53,6 +53,10 @@ type NavSection = { category: string; items: NavItem[] };
 
 const navigation: NavSection[] = [
   {
+    category: 'Getting Started',
+    items: [{ label: 'Documentation', path: '/docs' }],
+  },
+  {
     category: 'Actions',
     items: [{ label: 'Button', path: '/components/button' }],
   },
