@@ -174,7 +174,7 @@ export default function AccordionPage() {
   const [tab, setTab] = useState<Tab>('preview');
 
   return (
-    <div className="max-w-4xl mx-auto px-8 py-10">
+    <div className="max-w-4xl mx-auto px-4 sm:px-8 py-8 sm:py-10">
 
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-xs mb-6 text-slate-400 dark:text-slate-600">
@@ -423,7 +423,7 @@ export default function AccordionPage() {
           <h2 className="text-xs font-semibold tracking-wider uppercase mb-3 text-slate-400 dark:text-slate-500">
             Accordion Props
           </h2>
-          <div className="rounded-2xl overflow-hidden border border-white/60 dark:border-white/10
+          <div className="overflow-x-auto rounded-2xl border border-white/60 dark:border-white/10
             bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm shadow-sm">
             <table className="w-full text-sm">
               <thead>
@@ -452,7 +452,7 @@ export default function AccordionPage() {
           <h2 className="text-xs font-semibold tracking-wider uppercase mb-3 text-slate-400 dark:text-slate-500">
             AccordionItem Props
           </h2>
-          <div className="rounded-2xl overflow-hidden border border-white/60 dark:border-white/10
+          <div className="overflow-x-auto rounded-2xl border border-white/60 dark:border-white/10
             bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm shadow-sm">
             <table className="w-full text-sm">
               <thead>

@@ -917,7 +917,7 @@ export default function NavbarPage() {
   const [tab, setTab] = useState<Tab>('preview');
 
   return (
-    <div className="max-w-4xl mx-auto px-8 py-10">
+    <div className="max-w-4xl mx-auto px-4 sm:px-8 py-8 sm:py-10">
 
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-xs mb-6 text-slate-400 dark:text-slate-600">

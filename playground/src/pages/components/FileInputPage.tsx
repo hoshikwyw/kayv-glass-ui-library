@@ -310,8 +310,7 @@ function Chip({ children }: { children: string }) {
 
 function PropsTable({ data }: { data: typeof propsData }) {
   return (
-    <div className="rounded-2xl overflow-hidden
-      border border-white/60 dark:border-white/10
+    <div className="overflow-x-auto rounded-2xl border border-white/60 dark:border-white/10
       bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm shadow-sm">
       <table className="w-full text-sm">
         <thead>
@@ -366,7 +365,7 @@ export default function FileInputPage() {
   const [tab, setTab] = useState<Tab>('preview');
 
   return (
-    <div className="max-w-4xl mx-auto px-8 py-10">
+    <div className="max-w-4xl mx-auto px-4 sm:px-8 py-8 sm:py-10">
 
       {/* Breadcrumb nav */}
       <nav className="flex items-center gap-1.5 text-xs mb-6

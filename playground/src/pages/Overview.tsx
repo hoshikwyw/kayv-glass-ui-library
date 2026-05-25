@@ -140,7 +140,7 @@ export default function Overview() {
   const readyCount = components.filter(c => c.ready).length;
 
   return (
-    <div className="max-w-4xl mx-auto px-8 py-12">
+    <div className="max-w-4xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
 
       {/* Hero */}
       <div className="mb-12">
@@ -163,7 +163,7 @@ export default function Overview() {
       </div>
 
       {/* Feature pills */}
-      <div className="grid grid-cols-3 gap-3 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-12">
         {features.map(({ icon: Icon, label, desc }) => (
           <div
             key={label}
@@ -215,7 +215,7 @@ function MyApp() {
           </span>
         </h2>
 
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {components.map(c => {
             const Icon = c.icon;
 

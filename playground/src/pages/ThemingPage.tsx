@@ -91,7 +91,7 @@ export default function ThemingPage() {
   const { theme, setTheme, themes } = useTheme();
 
   return (
-    <div className="max-w-3xl mx-auto px-8 py-10 space-y-12">
+    <div className="max-w-3xl mx-auto px-4 sm:px-8 py-8 sm:py-10 space-y-12">
 
       {/* Header */}
       <div>
@@ -143,7 +143,7 @@ export default function ThemingPage() {
           </div>
 
           {/* Component previews */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-3">
               <div className="flex flex-wrap gap-2">
                 <Button variant="secondary" size="sm">Secondary</Button>
@@ -183,7 +183,7 @@ export default function ThemingPage() {
         <h2 className="text-base font-semibold text-slate-800 dark:text-slate-200">
           How it works
         </h2>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
             { step: '1', title: 'CSS variables', body: 'Eight --kv-p-{level} custom properties hold the active theme\'s RGB values.' },
             { step: '2', title: 'Tailwind palette', body: 'The kv-* colour utilities reference those variables, so every Tailwind opacity modifier just works.' },
@@ -236,7 +236,7 @@ export default function ThemingPage() {
         <h2 className="text-base font-semibold text-slate-800 dark:text-slate-200">
           Built-in themes
         </h2>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {themes.map(t => (
             <button
               key={t.name}

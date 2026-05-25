@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, ExternalLink, Sun, Moon, Palette } from 'lucide-react';
-import { NavLink, Outlet, Link } from 'react-router-dom';
+import { Search, ExternalLink, Sun, Moon, Palette, Menu, X } from 'lucide-react';
+import { NavLink, Outlet, Link, useLocation } from 'react-router-dom';
 import { useTheme } from 'kayv-glass-ui';
 
 function AppIcon({ className }: { className?: string }) {
@@ -86,13 +86,6 @@ const navigation: NavSection[] = [
     ],
   },
   {
-    category: 'Navigation',
-    items: [
-      { label: 'Navbar', path: '/components/navbar' },
-      { label: 'Breadcrumb', path: '/components/breadcrumb' },
-    ],
-  },
-  {
     category: 'Media',
     items: [
       { label: 'Avatar', path: '/components/avatar' },
@@ -102,6 +95,13 @@ const navigation: NavSection[] = [
     category: 'Overlay',
     items: [
       { label: 'Modal', path: '/components/modal' },
+    ],
+  },
+  {
+    category: 'Navigation',
+    items: [
+      { label: 'Navbar', path: '/components/navbar' },
+      { label: 'Breadcrumb', path: '/components/breadcrumb' },
     ],
   },
   {
@@ -115,14 +115,21 @@ const navigation: NavSection[] = [
 export default function Layout() {
   const [search, setSearch] = useState('');
   const [showThemePicker, setShowThemePicker] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const themePickerRef = useRef<HTMLDivElement>(null);
   const { theme, setTheme, themes } = useTheme();
+  const location = useLocation();
 
   const [isDark, setIsDark] = useState(() => {
     const stored = localStorage.getItem('theme');
     if (stored) return stored === 'dark';
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
+
+  // Close sidebar on route change (mobile nav)
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -134,6 +141,12 @@ export default function Layout() {
       localStorage.setItem('theme', 'light');
     }
   }, [isDark]);
+
+  // Lock body scroll when mobile sidebar is open
+  useEffect(() => {
+    document.body.style.overflow = isSidebarOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isSidebarOpen]);
 
   useEffect(() => {
     if (!showThemePicker) return;
@@ -157,6 +170,54 @@ export default function Layout() {
         .filter(s => s.items.length > 0)
     : navigation;
 
+  const sidebarNav = (
+    <nav className="flex flex-col gap-5 px-3">
+      {filteredNav.map(section => (
+        <div key={section.category}>
+          <p className="px-3 mb-1 text-[10px] font-semibold uppercase
+            tracking-widest text-slate-400 dark:text-slate-600">
+            {section.category}
+          </p>
+          <ul className="flex flex-col gap-px">
+            {section.items.map(item =>
+              item.soon ? (
+                <li key={item.path}>
+                  <span className="flex items-center justify-between px-3 py-1.5
+                    rounded-lg text-sm
+                    text-slate-400 dark:text-slate-700
+                    cursor-default select-none">
+                    {item.label}
+                    <span className="text-[9px] font-semibold uppercase tracking-wider
+                      text-slate-400 dark:text-slate-600
+                      bg-slate-100 dark:bg-slate-800/80
+                      px-1.5 py-0.5 rounded">
+                      soon
+                    </span>
+                  </span>
+                </li>
+              ) : (
+                <li key={item.path}>
+                  <NavLink
+                    to={item.path}
+                    className={({ isActive }) =>
+                      `flex items-center px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                        isActive
+                          ? 'bg-kv-50/80 dark:bg-kv-500/15 text-kv-600 dark:text-kv-300 font-medium border border-kv-100 dark:border-kv-500/20'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-white/60 dark:hover:bg-white/5'
+                      }`
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                </li>
+              )
+            )}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  );
+
   return (
     <>
       {/* ── Ambient background blobs ─────────────────────────────────────────── */}
@@ -171,26 +232,40 @@ export default function Layout() {
 
       <div className="flex flex-col h-full">
         {/* ── Header ─────────────────────────────────────────────────────────── */}
-        <header className="sticky top-0 z-30 shrink-0 flex items-center gap-4 px-6 h-14
+        <header className="sticky top-0 z-30 shrink-0 flex items-center gap-2 sm:gap-4 px-3 sm:px-6 h-14
           backdrop-blur-xl
           bg-white/70 dark:bg-slate-900/70
           border-b border-slate-200/60 dark:border-white/5
           shadow-sm shadow-slate-100/50 dark:shadow-black/20">
 
-          <Link to="/overview" className="flex items-center gap-2.5 shrink-0">
+          {/* Mobile sidebar toggle */}
+          <button
+            onClick={() => setIsSidebarOpen(o => !o)}
+            aria-label="Toggle sidebar"
+            className="lg:hidden p-1.5 rounded-lg
+              text-slate-500 dark:text-slate-400
+              hover:text-slate-700 dark:hover:text-slate-300
+              hover:bg-slate-100/60 dark:hover:bg-white/5
+              transition-colors"
+          >
+            <Menu className="h-4 w-4" />
+          </button>
+
+          <Link to="/overview" className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             <AppIcon className="h-7 w-7 rounded-lg" />
             <span className="font-bold text-sm text-slate-900 dark:text-white tracking-tight">
               kayv
               <span className="font-normal text-slate-400 dark:text-slate-500">-glass-ui</span>
             </span>
-            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full
+            <span className="hidden sm:inline-flex text-[10px] font-semibold px-1.5 py-0.5 rounded-full
               bg-kv-50 text-kv-600 border border-kv-200/60
               dark:bg-kv-500/20 dark:text-kv-300 dark:border-kv-500/30">
               v0.1.1
             </span>
           </Link>
 
-          <div className="flex-1 max-w-xs ml-2">
+          {/* Desktop search */}
+          <div className="hidden sm:block flex-1 max-w-xs ml-2">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5
                 text-slate-400 dark:text-slate-500 pointer-events-none" />
@@ -304,55 +379,62 @@ export default function Layout() {
         </header>
 
         <div className="flex flex-1 overflow-hidden">
+
+          {/* ── Mobile backdrop ───────────────────────────────────────────────── */}
+          {isSidebarOpen && (
+            <div
+              className="fixed inset-0 z-30 bg-black/30 backdrop-blur-[2px] lg:hidden"
+              onClick={() => setIsSidebarOpen(false)}
+              aria-hidden="true"
+            />
+          )}
+
           {/* ── Sidebar ──────────────────────────────────────────────────────── */}
-          <aside className="w-56 shrink-0 overflow-y-auto py-5
-            border-r border-slate-200/50 dark:border-white/5
-            bg-white/30 dark:bg-slate-950/40 backdrop-blur-sm">
-            <nav className="flex flex-col gap-5 px-3">
-              {filteredNav.map(section => (
-                <div key={section.category}>
-                  <p className="px-3 mb-1 text-[10px] font-semibold uppercase
-                    tracking-widest text-slate-400 dark:text-slate-600">
-                    {section.category}
-                  </p>
-                  <ul className="flex flex-col gap-px">
-                    {section.items.map(item =>
-                      item.soon ? (
-                        <li key={item.path}>
-                          <span className="flex items-center justify-between px-3 py-1.5
-                            rounded-lg text-sm
-                            text-slate-400 dark:text-slate-700
-                            cursor-default select-none">
-                            {item.label}
-                            <span className="text-[9px] font-semibold uppercase tracking-wider
-                              text-slate-400 dark:text-slate-600
-                              bg-slate-100 dark:bg-slate-800/80
-                              px-1.5 py-0.5 rounded">
-                              soon
-                            </span>
-                          </span>
-                        </li>
-                      ) : (
-                        <li key={item.path}>
-                          <NavLink
-                            to={item.path}
-                            className={({ isActive }) =>
-                              `flex items-center px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                                isActive
-                                  ? 'bg-kv-50/80 dark:bg-kv-500/15 text-kv-600 dark:text-kv-300 font-medium border border-kv-100 dark:border-kv-500/20'
-                                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-white/60 dark:hover:bg-white/5'
-                              }`
-                            }
-                          >
-                            {item.label}
-                          </NavLink>
-                        </li>
-                      )
-                    )}
-                  </ul>
-                </div>
-              ))}
-            </nav>
+          <aside
+            className={`
+              shrink-0 overflow-y-auto
+              border-r border-slate-200/50 dark:border-white/5
+              backdrop-blur-sm transition-transform duration-200 ease-out
+              fixed inset-y-0 left-0 z-40 w-64 pt-14
+              bg-white/95 dark:bg-slate-950/95
+              lg:relative lg:z-auto lg:w-56 lg:pt-0
+              lg:bg-white/30 lg:dark:bg-slate-950/40
+              ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+            `}
+          >
+            {/* Mobile sidebar header */}
+            <div className="flex items-center justify-between px-4 py-3 border-b
+              border-slate-200/60 dark:border-white/8 lg:hidden">
+              <div className="relative flex-1 mr-3">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5
+                  text-slate-400 dark:text-slate-500 pointer-events-none" />
+                <input
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Search…"
+                  className="w-full h-8 pl-8 pr-3 text-xs rounded-lg
+                    bg-slate-100/60 dark:bg-white/5
+                    border border-slate-200/60 dark:border-white/10
+                    text-slate-700 dark:text-slate-300
+                    placeholder:text-slate-400 dark:placeholder:text-slate-600
+                    focus:outline-none focus:border-kv-300 dark:focus:border-kv-500/40
+                    transition-colors"
+                />
+              </div>
+              <button
+                onClick={() => setIsSidebarOpen(false)}
+                aria-label="Close sidebar"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700
+                  dark:hover:text-slate-300 hover:bg-slate-100/60 dark:hover:bg-white/5
+                  transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="py-5">
+              {sidebarNav}
+            </div>
           </aside>
 
           {/* ── Main content ─────────────────────────────────────────────────── */}
