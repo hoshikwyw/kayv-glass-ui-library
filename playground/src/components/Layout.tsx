@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, ExternalLink, Sun, Moon, Palette, Menu, X } from 'lucide-react';
+import { Search, ExternalLink, Sun, Moon, Palette, Menu, X, Home, LayoutGrid, Layers } from 'lucide-react';
 import { NavLink, Outlet, Link, useLocation } from 'react-router-dom';
 import { useTheme } from 'kayv-glass-ui';
 
@@ -107,6 +107,7 @@ const navigation: NavSection[] = [
       { label: 'Navbar', path: '/components/navbar' },
       { label: 'Breadcrumb', path: '/components/breadcrumb' },
       { label: 'Footer', path: '/components/footer' },
+      { label: 'MenuBar', path: '/components/menubar' },
     ],
   },
   {
@@ -169,6 +170,8 @@ export default function Layout() {
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, [showThemePicker]);
+
+  const isComponentsActive = location.pathname.startsWith('/components');
 
   const filteredNav = search.trim()
     ? navigation
@@ -449,11 +452,98 @@ export default function Layout() {
           </aside>
 
           {/* ── Main content ─────────────────────────────────────────────────── */}
-          <main className="flex-1 overflow-y-auto">
+          <main className="flex-1 overflow-y-auto pb-16 lg:pb-0">
             <Outlet />
           </main>
         </div>
       </div>
+
+      {/* ── Bottom Navigation Bar — mobile & tablet ───────────────────────────── */}
+      <nav
+        aria-label="Bottom navigation"
+        className="lg:hidden fixed bottom-0 inset-x-0 z-20
+          flex items-stretch h-16
+          border-t border-slate-200/70 dark:border-white/8
+          bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl
+          shadow-[0_-4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.3)]"
+      >
+        {/* Overview */}
+        <NavLink
+          to="/overview"
+          className={({ isActive }) =>
+            `flex-1 flex flex-col items-center justify-center gap-1 transition-colors ${
+              isActive
+                ? 'text-kv-600 dark:text-kv-400'
+                : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+            }`
+          }
+        >
+          {({ isActive }) => (
+            <>
+              <span className={`p-1.5 rounded-xl transition-colors ${
+                isActive ? 'bg-kv-50 dark:bg-kv-500/15' : ''
+              }`}>
+                <Home className="h-[18px] w-[18px]" />
+              </span>
+              <span className="text-[10px] font-medium leading-none">Overview</span>
+            </>
+          )}
+        </NavLink>
+
+        {/* Components — opens sidebar */}
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          className={`flex-1 flex flex-col items-center justify-center gap-1 transition-colors ${
+            isComponentsActive
+              ? 'text-kv-600 dark:text-kv-400'
+              : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+          }`}
+        >
+          <span className={`p-1.5 rounded-xl transition-colors ${
+            isComponentsActive ? 'bg-kv-50 dark:bg-kv-500/15' : ''
+          }`}>
+            <Layers className="h-[18px] w-[18px]" />
+          </span>
+          <span className="text-[10px] font-medium leading-none">Components</span>
+        </button>
+
+        {/* Theming */}
+        <NavLink
+          to="/theming"
+          className={({ isActive }) =>
+            `flex-1 flex flex-col items-center justify-center gap-1 transition-colors ${
+              isActive
+                ? 'text-kv-600 dark:text-kv-400'
+                : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+            }`
+          }
+        >
+          {({ isActive }) => (
+            <>
+              <span className={`p-1.5 rounded-xl transition-colors ${
+                isActive ? 'bg-kv-50 dark:bg-kv-500/15' : ''
+              }`}>
+                <LayoutGrid className="h-[18px] w-[18px]" />
+              </span>
+              <span className="text-[10px] font-medium leading-none">Theming</span>
+            </>
+          )}
+        </NavLink>
+
+        {/* GitHub */}
+        <a
+          href="https://github.com/hoshikwyw/kayv-glass-ui-library"
+          target="_blank"
+          rel="noreferrer"
+          className="flex-1 flex flex-col items-center justify-center gap-1 transition-colors
+            text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+        >
+          <span className="p-1.5 rounded-xl">
+            <ExternalLink className="h-[18px] w-[18px]" />
+          </span>
+          <span className="text-[10px] font-medium leading-none">GitHub</span>
+        </a>
+      </nav>
     </>
   );
 }

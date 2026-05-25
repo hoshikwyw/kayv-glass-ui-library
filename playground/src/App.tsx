@@ -23,6 +23,7 @@ import TabsPage from './pages/components/TabsPage';
 import ProgressPage from './pages/components/ProgressPage';
 import CheckboxPage from './pages/components/CheckboxPage';
 import GlobePage from './pages/components/GlobePage';
+import MenuBarPage from './pages/components/MenuBarPage';
 import ThemingPage from './pages/ThemingPage';
 import ComingSoon from './pages/ComingSoon';
 
@@ -55,6 +56,7 @@ export default function App() {
           <Route path="components/progress" element={<ProgressPage />} />
           <Route path="components/checkbox" element={<CheckboxPage />} />
           <Route path="components/globe" element={<GlobePage />} />
+          <Route path="components/menubar" element={<MenuBarPage />} />
           <Route path="theming" element={<ThemingPage />} />
           <Route path="components/:slug" element={<ComingSoon />} />
         </Route>

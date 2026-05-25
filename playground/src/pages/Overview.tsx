@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import {
   Zap, Package, FileCode,
   MousePointerClick, Tag, Layers, TextCursor,
-  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, Menu, CalendarDays, Upload, MessageSquare, PanelBottom, PanelRight, LayoutList, GanttChartSquare, CheckSquare, Globe2,
+  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, Menu, CalendarDays, Upload, MessageSquare, PanelBottom, PanelRight, LayoutList, GanttChartSquare, CheckSquare, Globe2, MenuSquare,
   ArrowRight, CheckCircle2,
 } from 'lucide-react';
 import type { ElementType } from 'react';
@@ -179,6 +179,13 @@ const components: {
     path: '/components/globe',
     desc: 'Interactive 3D WebGL globe with drag-to-rotate, inertia, and city markers.',
     icon: Globe2,
+    ready: true,
+  },
+  {
+    label: 'MenuBar',
+    path: '/components/menubar',
+    desc: 'Glass sidebar on desktop, bottom navigation bar on mobile/tablet — one component, two layouts.',
+    icon: MenuSquare,
     ready: true,
   },
 ];
