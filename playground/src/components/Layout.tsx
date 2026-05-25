@@ -132,6 +132,12 @@ const navigation: NavSection[] = [
       { label: 'Confetti', path: '/components/confetti' },
     ],
   },
+  {
+    category: 'Decorative',
+    items: [
+      { label: 'Backgrounds', path: '/components/backgrounds' },
+    ],
+  },
 ];
 
 export default function Layout() {

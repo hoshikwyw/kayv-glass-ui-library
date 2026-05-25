@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import {
   Zap, Package, FileCode,
   MousePointerClick, Tag, Layers, TextCursor,
-  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, Menu, CalendarDays, Upload, MessageSquare, PanelBottom, PanelRight, LayoutList, GanttChartSquare, CheckSquare, Globe2, MenuSquare, PartyPopper,
+  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, Menu, CalendarDays, Upload, MessageSquare, PanelBottom, PanelRight, LayoutList, GanttChartSquare, CheckSquare, Globe2, MenuSquare, PartyPopper, Grip,
   ArrowRight, CheckCircle2,
 } from 'lucide-react';
 import type { ElementType } from 'react';
@@ -193,6 +193,13 @@ const components: {
     path: '/components/confetti',
     desc: 'Celebration particle effects — presets, emoji bursts, and a ref-based imperative API.',
     icon: PartyPopper,
+    ready: true,
+  },
+  {
+    label: 'Backgrounds',
+    path: '/components/backgrounds',
+    desc: 'Dot pattern, grid pattern, and ambient gradient background primitives.',
+    icon: Grip,
     ready: true,
   },
 ];

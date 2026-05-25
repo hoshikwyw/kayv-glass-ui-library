@@ -21,3 +21,4 @@ export * from './Checkbox';
 export * from './Globe';
 export * from './MenuBar';
 export * from './Confetti';
+export * from './Background';

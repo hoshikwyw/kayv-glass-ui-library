@@ -25,6 +25,7 @@ import CheckboxPage from './pages/components/CheckboxPage';
 import GlobePage from './pages/components/GlobePage';
 import MenuBarPage from './pages/components/MenuBarPage';
 import ConfettiPage from './pages/components/ConfettiPage';
+import BackgroundPage from './pages/components/BackgroundPage';
 import DocsPage from './pages/DocsPage';
 import ThemingPage from './pages/ThemingPage';
 import ComingSoon from './pages/ComingSoon';
@@ -61,6 +62,7 @@ export default function App() {
           <Route path="components/globe" element={<GlobePage />} />
           <Route path="components/menubar" element={<MenuBarPage />} />
           <Route path="components/confetti" element={<ConfettiPage />} />
+          <Route path="components/backgrounds" element={<BackgroundPage />} />
           <Route path="theming" element={<ThemingPage />} />
           <Route path="components/:slug" element={<ComingSoon />} />
         </Route>
