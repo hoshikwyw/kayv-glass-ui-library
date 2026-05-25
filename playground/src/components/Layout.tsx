@@ -95,6 +95,7 @@ const navigation: NavSection[] = [
     category: 'Overlay',
     items: [
       { label: 'Modal', path: '/components/modal' },
+      { label: 'Drawer', path: '/components/drawer' },
     ],
   },
   {

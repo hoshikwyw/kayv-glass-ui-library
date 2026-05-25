@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import {
   Zap, Package, FileCode,
   MousePointerClick, Tag, Layers, TextCursor,
-  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, Menu, CalendarDays, Upload, MessageSquare, PanelBottom,
+  AlignJustify, AlertCircle, Bell, ChevronsUpDown, UserCircle2, RectangleHorizontal, Navigation, Menu, CalendarDays, Upload, MessageSquare, PanelBottom, PanelRight,
   ArrowRight, CheckCircle2,
 } from 'lucide-react';
 import type { ElementType } from 'react';
@@ -102,6 +102,13 @@ const components: {
     path: '/components/modal',
     desc: 'Dialog overlay with focus trap, scroll lock, and smooth animations.',
     icon: RectangleHorizontal,
+    ready: true,
+  },
+  {
+    label: 'Drawer',
+    path: '/components/drawer',
+    desc: 'Slide-in panel from any edge — left, right, top, or bottom.',
+    icon: PanelRight,
     ready: true,
   },
   {
