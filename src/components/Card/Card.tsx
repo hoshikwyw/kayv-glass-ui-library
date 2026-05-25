@@ -2,12 +2,13 @@
 
 import React from 'react';
 import { cn } from '../../utils/cn';
-import { cardBase, variantStyles, paddingStyles } from './Card.styles';
+import { cardBase, variantStyles, paddingStyles, imageBase, imageAspectStyles, imageOverlayBase } from './Card.styles';
 import type {
   CardProps,
   CardHeaderProps,
   CardContentProps,
   CardFooterProps,
+  CardImageProps,
 } from './Card.types';
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
@@ -71,3 +72,24 @@ export const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
   )
 );
 CardFooter.displayName = 'CardFooter';
+
+export const CardImage = React.forwardRef<HTMLDivElement, CardImageProps>(
+  ({ className, src, alt = '', aspect = 'video', overlay = false, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(imageBase, imageAspectStyles[aspect], className)}
+      {...props}
+    >
+      {src && (
+        <img
+          src={src}
+          alt={alt}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      )}
+      {overlay && <div className={imageOverlayBase} />}
+      {children}
+    </div>
+  )
+);
+CardImage.displayName = 'CardImage';

@@ -17,3 +17,4 @@ export * from './Footer';
 export * from './Drawer';
 export * from './Tabs';
 export * from './Progress';
+export * from './Checkbox';

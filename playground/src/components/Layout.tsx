@@ -79,6 +79,7 @@ const navigation: NavSection[] = [
       { label: 'Input', path: '/components/input' },
       { label: 'Select', path: '/components/select' },
       { label: 'File Input', path: '/components/file-input' },
+      { label: 'Checkbox', path: '/components/checkbox' },
     ],
   },
   {

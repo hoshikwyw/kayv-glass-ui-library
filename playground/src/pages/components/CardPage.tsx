@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Copy, Check, Star, TrendingUp, Users, Zap } from 'lucide-react';
-import { Card, CardHeader, CardContent, CardFooter, Button, Badge } from '../../../../src';
+import { ChevronRight, Copy, Check, Star, TrendingUp, Users, Zap, CheckCircle2 } from 'lucide-react';
+import { Card, CardHeader, CardContent, CardFooter, CardImage, Button, Badge } from '../../../../src';
 
 type Tab = 'preview' | 'code';
 
@@ -50,6 +50,11 @@ const subPropsData = [
     name: 'CardFooter',
     props: 'children, className?, …div',
     description: 'Actions row with a top divider, flex layout, and gap between children.',
+  },
+  {
+    name: 'CardImage',
+    props: 'src?, alt?, aspect?, overlay?, children?, className?, …div',
+    description: 'Hero image slot that snaps to the top of the card. Supports video / square / wide aspect ratios and an optional gradient overlay.',
   },
 ];
 
@@ -102,6 +107,60 @@ const snippets: Record<string, string> = {
   'className Override': `<Card className="max-w-sm ring-2 ring-indigo-300/40 dark:ring-indigo-500/30">
   <CardHeader title="Custom ring" />
   <CardContent>tailwind-merge handles conflicts cleanly.</CardContent>
+</Card>`,
+
+  'Image Card': `import { Card, CardImage, CardContent, CardFooter, Button, Badge } from 'kayv-glass-ui';
+
+<Card padding="none" className="overflow-hidden max-w-sm">
+  <CardImage
+    src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+    alt="Mountain landscape"
+    aspect="video"
+    overlay
+  >
+    <div className="absolute bottom-3 left-4">
+      <Badge variant="default" size="sm">Travel</Badge>
+    </div>
+  </CardImage>
+  <div className="p-5">
+    <CardContent>
+      <h3 className="font-semibold text-slate-900 dark:text-white mb-1">Into the Alps</h3>
+      <p className="text-xs text-slate-500 leading-relaxed">
+        A breathtaking journey through snow-capped peaks and crystal lakes.
+      </p>
+    </CardContent>
+    <CardFooter className="mt-3 pt-3">
+      <Button size="sm" variant="primary">Read more</Button>
+    </CardFooter>
+  </div>
+</Card>`,
+
+  'Pricing Card': `import { Card, CardHeader, CardContent, CardFooter, Button, Badge } from 'kayv-glass-ui';
+
+{/* Highlighted Pro tier */}
+<Card variant="elevated" padding="lg"
+  className="ring-2 ring-kv-400/40 dark:ring-kv-500/30">
+  <div className="flex items-start justify-between mb-4">
+    <CardHeader title="Pro" description="For growing teams" />
+    <Badge variant="primary" size="sm">Popular</Badge>
+  </div>
+  <div className="mb-6">
+    <span className="text-4xl font-bold text-slate-900 dark:text-white">$29</span>
+    <span className="text-slate-500 dark:text-slate-400 text-sm ml-1">/ mo</span>
+  </div>
+  <CardContent>
+    <ul className="flex flex-col gap-2">
+      {['Unlimited projects', 'Priority support', 'Custom domains', 'Analytics dashboard'].map(f => (
+        <li key={f} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+          <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+          {f}
+        </li>
+      ))}
+    </ul>
+  </CardContent>
+  <CardFooter>
+    <Button variant="primary" className="w-full justify-center">Get started</Button>
+  </CardFooter>
 </Card>`,
 };
 
@@ -190,9 +249,9 @@ export default function CardPage() {
         </h1>
         <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-xl">
           A frosted glass container built with <Chip>React.forwardRef</Chip>. Compose with{' '}
-          <Chip>CardHeader</Chip>, <Chip>CardContent</Chip>, and <Chip>CardFooter</Chip> for
-          structured layouts, or place any children directly inside for freeform use. Four
-          variants control glass intensity and shadow depth.
+          <Chip>CardHeader</Chip>, <Chip>CardContent</Chip>, <Chip>CardFooter</Chip>, and{' '}
+          <Chip>CardImage</Chip> for structured layouts, or place any children directly inside for
+          freeform use. Four variants control glass intensity and shadow depth.
         </p>
       </div>
 
@@ -331,6 +390,147 @@ export default function CardPage() {
                   <Button size="sm" variant="primary">Deploy now</Button>
                   <Button size="sm" variant="ghost">View logs</Button>
                 </CardFooter>
+              </Card>
+            </div>
+          </SectionCard>
+
+          {/* Image cards */}
+          <SectionCard label="Image Cards">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* Blog card */}
+              <Card padding="none" className="overflow-hidden">
+                <CardImage
+                  src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80"
+                  alt="Mountain"
+                  aspect="video"
+                  overlay
+                >
+                  <div className="absolute bottom-3 left-3">
+                    <Badge variant="default" size="sm">Travel</Badge>
+                  </div>
+                </CardImage>
+                <div className="p-4">
+                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1">Into the Alps</p>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    A breathtaking journey through snow-capped peaks.
+                  </p>
+                  <CardFooter className="mt-3 pt-3">
+                    <Button size="sm" variant="primary">Read more</Button>
+                  </CardFooter>
+                </div>
+              </Card>
+
+              {/* Product card */}
+              <Card padding="none" className="overflow-hidden">
+                <CardImage
+                  src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80"
+                  alt="Watch"
+                  aspect="square"
+                />
+                <div className="p-4">
+                  <div className="flex items-start justify-between mb-1">
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">Minimal Watch</p>
+                    <Badge variant="success" size="sm">In stock</Badge>
+                  </div>
+                  <p className="text-xs text-slate-500 mb-3">Premium stainless steel.</p>
+                  <p className="text-lg font-bold text-slate-900 dark:text-white mb-3">$299</p>
+                  <Button size="sm" variant="primary" className="w-full justify-center">Add to cart</Button>
+                </div>
+              </Card>
+
+              {/* Article card — wide aspect */}
+              <Card padding="none" className="overflow-hidden">
+                <CardImage
+                  src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80"
+                  alt="Laptop"
+                  aspect="wide"
+                  overlay
+                >
+                  <div className="absolute inset-0 flex flex-col justify-end p-3">
+                    <p className="text-xs font-semibold text-white/90">Engineering</p>
+                    <p className="text-sm font-bold text-white leading-snug">
+                      Building fast UIs with glass design
+                    </p>
+                  </div>
+                </CardImage>
+                <div className="p-4">
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    Deep dive into layered blur and alpha compositing for modern UIs.
+                  </p>
+                  <CardFooter className="mt-3 pt-3">
+                    <div className="flex items-center gap-2">
+                      <div className="h-6 w-6 rounded-full bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center">
+                        <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-300">K</span>
+                      </div>
+                      <span className="text-xs text-slate-500">5 min read</span>
+                    </div>
+                  </CardFooter>
+                </div>
+              </Card>
+            </div>
+          </SectionCard>
+
+          {/* Pricing cards */}
+          <SectionCard label="Pricing Cards">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
+              {/* Free */}
+              <Card variant="default" padding="lg">
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Free</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">For individuals & side projects</p>
+                <div className="mb-6">
+                  <span className="text-3xl font-bold text-slate-900 dark:text-white">$0</span>
+                  <span className="text-slate-500 dark:text-slate-400 text-sm ml-1">/ mo</span>
+                </div>
+                <ul className="flex flex-col gap-2 mb-6">
+                  {['3 projects', 'Community support', '1 GB storage'].map(f => (
+                    <li key={f} className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Button variant="secondary" size="sm" className="w-full justify-center">Get started</Button>
+              </Card>
+
+              {/* Pro — highlighted */}
+              <Card variant="elevated" padding="lg"
+                className="ring-2 ring-kv-400/50 dark:ring-kv-500/30 relative">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <Badge variant="primary" size="sm">Most popular</Badge>
+                </div>
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Pro</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">For growing teams</p>
+                <div className="mb-6">
+                  <span className="text-3xl font-bold text-slate-900 dark:text-white">$29</span>
+                  <span className="text-slate-500 dark:text-slate-400 text-sm ml-1">/ mo</span>
+                </div>
+                <ul className="flex flex-col gap-2 mb-6">
+                  {['Unlimited projects', 'Priority support', '50 GB storage', 'Custom domains'].map(f => (
+                    <li key={f} className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Button variant="primary" size="sm" className="w-full justify-center">Get started</Button>
+              </Card>
+
+              {/* Enterprise */}
+              <Card variant="default" padding="lg">
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Enterprise</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">For large organizations</p>
+                <div className="mb-6">
+                  <span className="text-3xl font-bold text-slate-900 dark:text-white">Custom</span>
+                </div>
+                <ul className="flex flex-col gap-2 mb-6">
+                  {['Everything in Pro', 'SSO & SAML', 'SLA guarantee', 'Dedicated support'].map(f => (
+                    <li key={f} className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Button variant="secondary" size="sm" className="w-full justify-center">Contact sales</Button>
               </Card>
             </div>
           </SectionCard>

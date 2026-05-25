@@ -1,4 +1,4 @@
-import type { CardVariant, CardPadding } from './Card.types';
+import type { CardVariant, CardPadding, CardImageAspect } from './Card.types';
 
 export const cardBase =
   'rounded-2xl backdrop-blur-sm';
@@ -26,3 +26,12 @@ export const paddingStyles: Record<CardPadding, string> = {
   md:   'p-6',
   lg:   'p-8',
 };
+
+export const imageAspectStyles: Record<CardImageAspect, string> = {
+  video:  'aspect-video',
+  square: 'aspect-square',
+  wide:   'aspect-[21/9]',
+};
+
+export const imageBase = 'relative w-full overflow-hidden rounded-t-2xl';
+export const imageOverlayBase = 'absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent';
