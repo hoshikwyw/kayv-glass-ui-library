@@ -86,6 +86,13 @@ const navigation: NavSection[] = [
     ],
   },
   {
+    category: 'Navigation',
+    items: [
+      { label: 'Navbar', path: '/components/navbar' },
+      { label: 'Breadcrumb', path: '/components/breadcrumb' },
+    ],
+  },
+  {
     category: 'Media',
     items: [
       { label: 'Avatar', path: '/components/avatar' },
@@ -95,12 +102,6 @@ const navigation: NavSection[] = [
     category: 'Overlay',
     items: [
       { label: 'Modal', path: '/components/modal' },
-    ],
-  },
-  {
-    category: 'Navigation',
-    items: [
-      { label: 'Breadcrumb', path: '/components/breadcrumb' },
     ],
   },
   {

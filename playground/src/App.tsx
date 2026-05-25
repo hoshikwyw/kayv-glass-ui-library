@@ -16,6 +16,7 @@ import BreadcrumbPage from './pages/components/BreadcrumbPage';
 import CalendarPage from './pages/components/CalendarPage';
 import FileInputPage from './pages/components/FileInputPage';
 import TooltipPage from './pages/components/TooltipPage';
+import NavbarPage from './pages/components/NavbarPage';
 import ThemingPage from './pages/ThemingPage';
 import ComingSoon from './pages/ComingSoon';
 
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="components/calendar" element={<CalendarPage />} />
           <Route path="components/file-input" element={<FileInputPage />} />
           <Route path="components/tooltip" element={<TooltipPage />} />
+          <Route path="components/navbar" element={<NavbarPage />} />
           <Route path="theming" element={<ThemingPage />} />
           <Route path="components/:slug" element={<ComingSoon />} />
         </Route>

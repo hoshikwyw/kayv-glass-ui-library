@@ -12,3 +12,4 @@ export * from './Breadcrumb';
 export * from './Calendar';
 export * from './FileInput';
 export * from './Tooltip';
+export * from './Navbar';
