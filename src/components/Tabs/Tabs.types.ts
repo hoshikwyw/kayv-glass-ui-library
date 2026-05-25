@@ -2,7 +2,7 @@ import type React from 'react';
 
 export type TabsVariant = 'pills' | 'underline' | 'line';
 
-export interface TabsProps extends React.ComponentPropsWithoutRef<'div'> {
+export interface TabsProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
   /** Value of the initially selected tab (uncontrolled). */
   defaultValue?: string;
   /** Controlled active tab value. */

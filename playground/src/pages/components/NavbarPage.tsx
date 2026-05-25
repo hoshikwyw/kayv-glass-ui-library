@@ -697,10 +697,10 @@ function DemoEcommerce() {
         </div>
       </NavbarBrand>
       <NavbarContent justify="center">
-        {categories.map(({ id, label, hot }) => (
-          <NavbarItem key={id} onClick={() => setActive(id)} isActive={active === id} className="cursor-pointer gap-1.5">
-            {label}
-            {hot && <Badge variant="danger" className="text-[9px] px-1.5 py-0">Hot</Badge>}
+        {categories.map((cat) => (
+          <NavbarItem key={cat.id} onClick={() => setActive(cat.id)} isActive={active === cat.id} className="cursor-pointer gap-1.5">
+            {cat.label}
+            {'hot' in cat && cat.hot && <Badge variant="danger" className="text-[9px] px-1.5 py-0">Hot</Badge>}
           </NavbarItem>
         ))}
       </NavbarContent>
