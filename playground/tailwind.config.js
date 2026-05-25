@@ -20,6 +20,20 @@ export default {
           '700': 'rgb(var(--kv-p-700) / <alpha-value>)',
         },
       },
+      keyframes: {
+        'progress-shimmer': {
+          '0%':   { transform: 'translateX(-100%) skewX(-12deg)' },
+          '100%': { transform: 'translateX(500%) skewX(-12deg)' },
+        },
+        'progress-indeterminate': {
+          '0%':        { transform: 'translateX(-100%)' },
+          '60%, 100%': { transform: 'translateX(350%)' },
+        },
+      },
+      animation: {
+        'progress-shimmer':       'progress-shimmer 1.8s linear infinite',
+        'progress-indeterminate': 'progress-indeterminate 1.5s ease-in-out infinite',
+      },
     },
   },
   plugins: [],

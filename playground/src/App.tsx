@@ -20,6 +20,7 @@ import NavbarPage from './pages/components/NavbarPage';
 import FooterPage from './pages/components/FooterPage';
 import DrawerPage from './pages/components/DrawerPage';
 import TabsPage from './pages/components/TabsPage';
+import ProgressPage from './pages/components/ProgressPage';
 import ThemingPage from './pages/ThemingPage';
 import ComingSoon from './pages/ComingSoon';
 
@@ -49,6 +50,7 @@ export default function App() {
           <Route path="components/footer" element={<FooterPage />} />
           <Route path="components/drawer" element={<DrawerPage />} />
           <Route path="components/tabs" element={<TabsPage />} />
+          <Route path="components/progress" element={<ProgressPage />} />
           <Route path="theming" element={<ThemingPage />} />
           <Route path="components/:slug" element={<ComingSoon />} />
         </Route>
