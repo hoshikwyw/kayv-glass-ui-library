@@ -123,7 +123,7 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
             <span
               key={i}
               className={cn(
-                'block rounded-full ring-2 ring-white dark:ring-slate-900',
+                'inline-flex shrink-0 rounded-full ring-2 ring-white dark:ring-slate-900',
                 i > 0 && groupOverlapStyles[size],
               )}
               style={{ zIndex: visible.length - i }}
@@ -138,7 +138,7 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
               className={cn(
                 overflowBadgeBase,
                 avatarSizeStyles[size],
-                groupOverlapStyles[size],
+                visible.length > 0 && groupOverlapStyles[size],
               )}
               style={{ zIndex: 0 }}
             >
