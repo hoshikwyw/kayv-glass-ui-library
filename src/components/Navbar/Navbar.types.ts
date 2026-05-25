@@ -16,3 +16,12 @@ export interface NavbarContentProps extends React.ComponentPropsWithoutRef<'div'
 export interface NavbarItemProps extends React.ComponentPropsWithoutRef<'a'> {
   isActive?: boolean;
 }
+
+export interface NavbarMenuToggleProps extends React.ComponentPropsWithoutRef<'button'> {
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+export interface NavbarMenuProps extends React.ComponentPropsWithoutRef<'div'> {
+  isOpen: boolean;
+}

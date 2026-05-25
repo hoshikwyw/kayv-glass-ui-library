@@ -11,12 +11,18 @@ import {
   itemBase,
   itemActiveStyles,
   itemInactiveStyles,
+  menuBase,
+  menuInner,
+  toggleBase,
+  toggleBarBase,
 } from './Navbar.styles';
 import type {
   NavbarProps,
   NavbarBrandProps,
   NavbarContentProps,
   NavbarItemProps,
+  NavbarMenuToggleProps,
+  NavbarMenuProps,
 } from './Navbar.types';
 
 export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
@@ -70,3 +76,41 @@ export const NavbarItem = React.forwardRef<HTMLAnchorElement, NavbarItemProps>(
   )
 );
 NavbarItem.displayName = 'NavbarItem';
+
+export const NavbarMenuToggle = React.forwardRef<HTMLButtonElement, NavbarMenuToggleProps>(
+  ({ className, isOpen, onToggle, ...props }, ref) => (
+    <button
+      ref={ref}
+      type="button"
+      aria-label={isOpen ? 'Close menu' : 'Open menu'}
+      aria-expanded={isOpen}
+      onClick={onToggle}
+      className={cn(toggleBase, className)}
+      {...props}
+    >
+      <span className={cn(toggleBarBase, isOpen && 'translate-y-[7px] rotate-45')} />
+      <span className={cn(toggleBarBase, isOpen && 'opacity-0 scale-x-0')} />
+      <span className={cn(toggleBarBase, isOpen && '-translate-y-[7px] -rotate-45')} />
+    </button>
+  )
+);
+NavbarMenuToggle.displayName = 'NavbarMenuToggle';
+
+export const NavbarMenu = React.forwardRef<HTMLDivElement, NavbarMenuProps>(
+  ({ className, isOpen, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
+      className={cn(menuBase, className)}
+      aria-hidden={!isOpen}
+      {...props}
+    >
+      <div className={cn('overflow-hidden transition-opacity duration-200', isOpen ? 'opacity-100' : 'opacity-0')}>
+        <div className={cn(menuInner, !isOpen && 'pointer-events-none')}>
+          {children}
+        </div>
+      </div>
+    </div>
+  )
+);
+NavbarMenu.displayName = 'NavbarMenu';

@@ -40,3 +40,25 @@ export const itemInactiveStyles =
   'text-slate-600 dark:text-slate-400 ' +
   'hover:text-slate-900 dark:hover:text-slate-200 ' +
   'hover:bg-white/60 dark:hover:bg-white/5';
+
+// ── Mobile menu ───────────────────────────────────────────────────────────────
+
+export const menuBase =
+  'w-full grid transition-[grid-template-rows] duration-200 ease-out ' +
+  'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl ' +
+  'border-b border-slate-200/60 dark:border-white/8';
+
+export const menuInner = 'px-4 py-3 flex flex-col gap-1';
+
+// ── Hamburger toggle ──────────────────────────────────────────────────────────
+
+export const toggleBase =
+  'relative h-8 w-8 flex flex-col items-center justify-center gap-[5px] ' +
+  'rounded-lg transition-colors duration-150 ' +
+  'text-slate-600 dark:text-slate-400 ' +
+  'hover:bg-slate-100/70 dark:hover:bg-white/5 ' +
+  'focus-visible:outline-none focus-visible:ring-2 ' +
+  'focus-visible:ring-kv-300 dark:focus-visible:ring-kv-500/40';
+
+export const toggleBarBase =
+  'h-0.5 w-4 rounded-full bg-current transition-all duration-200 origin-center';
