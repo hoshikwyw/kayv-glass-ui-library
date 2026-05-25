@@ -133,6 +133,7 @@ const categories = [
   { label: 'Navigation', items: ['Navbar', 'Breadcrumb', 'Footer', 'MenuBar'] },
   { label: 'Visualization', items: ['Globe'] },
   { label: 'Effects', items: ['Confetti'] },
+  { label: 'Decorative', items: ['DotPattern', 'GridPattern', 'GradientBackground'] },
   { label: 'Media', items: ['Avatar', 'Calendar'] },
 ];
 

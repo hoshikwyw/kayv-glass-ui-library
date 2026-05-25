@@ -2,7 +2,7 @@
 
 A production-grade React component library built with TypeScript and Tailwind CSS. The design language centres on iOS-inspired glass morphism — translucent surfaces, `backdrop-blur`, and razor-thin borders — while keeping the component API clean, fully typed, and framework-agnostic.
 
-> **Status:** `v0.1.1` — 23 components shipped. Core infrastructure is stable.
+> **Status:** `v0.1.1` — 26 components shipped. Core infrastructure is stable.
 
 ---
 
@@ -38,6 +38,7 @@ A production-grade React component library built with TypeScript and Tailwind CS
   - [Tooltip](#tooltip)
   - [Globe](#globe)
   - [Confetti](#confetti)
+  - [Backgrounds](#backgrounds)
 - [Utilities](#utilities)
 - [Project Structure](#project-structure)
 - [Local Development](#local-development)
@@ -857,6 +858,80 @@ confettiEmoji('🚀');
 
 ---
 
+### Backgrounds
+
+Three background primitives for dot grids, line grids, and ambient gradient blobs. Each is a lightweight SVG or div that tiles to fill its container — pair with a CSS `mask-image` class to create radial or linear fade effects.
+
+#### `DotPattern`
+
+| Prop        | Type                      | Default | Description                                            |
+| ----------- | ------------------------- | ------- | ------------------------------------------------------ |
+| `width`     | `number`                  | `16`    | Horizontal cell size (spacing between dot centres).    |
+| `height`    | `number`                  | `16`    | Vertical cell size.                                    |
+| `x / y`     | `number`                  | `0`     | Pattern offset in px.                                  |
+| `cx / cy`   | `number`                  | `1`     | Dot position within each cell.                         |
+| `cr`        | `number`                  | `1`     | Dot radius in px.                                      |
+| `className` | `string`                  | —       | Applied to the `<svg>`. Use for `mask-image`, `fill`, opacity, etc. |
+| `...props`  | `SVGProps<SVGSVGElement>`  | —       | All native SVG attributes forwarded.                   |
+
+```tsx
+{/* Place inside a relative overflow-hidden container */}
+<div className="relative h-64 overflow-hidden rounded-2xl bg-slate-950">
+  <DotPattern
+    width={20}
+    height={20}
+    cr={1.2}
+    className="[mask-image:radial-gradient(350px_circle_at_center,white,transparent)]"
+  />
+  <div className="relative z-10 flex h-full items-center justify-center">
+    Content
+  </div>
+</div>
+```
+
+#### `GridPattern`
+
+| Prop                  | Type                      | Default | Description                                               |
+| --------------------- | ------------------------- | ------- | --------------------------------------------------------- |
+| `width`               | `number`                  | `40`    | Grid cell width in px.                                    |
+| `height`              | `number`                  | `40`    | Grid cell height in px.                                   |
+| `x / y`               | `number`                  | `-1`    | Pattern offset. −1 aligns lines flush with the container. |
+| `squares`             | `[number, number][]`      | —       | `[col, row]` pairs of cells to highlight.                 |
+| `lineStrokeDasharray` | `number \| string`        | `0`     | `strokeDasharray` for the lines — e.g. `"4 4"` for dashes. |
+| `className`           | `string`                  | —       | Applied to the `<svg>`. Use for `mask-image`, `stroke`, opacity. |
+| `...props`            | `SVGProps<SVGSVGElement>`  | —       | All native SVG attributes forwarded.                      |
+
+```tsx
+<div className="relative h-64 overflow-hidden rounded-2xl bg-slate-950">
+  <GridPattern
+    width={48}
+    height={48}
+    squares={[[1, 2], [3, 1], [5, 3], [2, 5]]}
+    className="[mask-image:radial-gradient(400px_circle_at_center,white,transparent)]"
+  />
+</div>
+```
+
+#### `GradientBackground`
+
+| Prop        | Type      | Default | Description                                                              |
+| ----------- | --------- | ------- | ------------------------------------------------------------------------ |
+| `fixed`     | `boolean` | `true`  | `true` = `position: fixed` (full viewport). `false` = `position: absolute`. |
+| `className` | `string`  | —       | Merged onto the wrapper div.                                             |
+
+```tsx
+{/* Render once in your root layout — sits behind everything */}
+<GradientBackground />
+
+{/* Or scope it to a section */}
+<div className="relative overflow-hidden rounded-2xl">
+  <GradientBackground fixed={false} />
+  <div className="relative z-10">Content</div>
+</div>
+```
+
+---
+
 ## Utilities
 
 ### `cn(...inputs)`
@@ -906,10 +981,11 @@ kayv-glass-ui/
 │   │   ├── Checkbox/
 │   │   ├── Tooltip/
 │   │   ├── Globe/
-│   │   └── Confetti/
-│   │       ├── Confetti.types.ts  # Four-file pattern: types → styles → impl → index
-│   │       ├── Confetti.styles.ts
-│   │       ├── Confetti.tsx
+│   │   ├── Confetti/
+│   │   └── Background/
+│   │       ├── Background.types.ts  # Four-file pattern: types → styles → impl → index
+│   │       ├── Background.styles.ts
+│   │       ├── Background.tsx       # exports DotPattern, GridPattern, GradientBackground
 │   │       └── index.ts
 │   ├── utils/
 │   │   └── cn.ts                  # clsx + tailwind-merge helper
@@ -1094,8 +1170,10 @@ Create `playground/src/pages/components/SpinnerPage.tsx` following the ButtonPag
 - [x] MenuBar: glass sidebar (desktop) + bottom nav (mobile) — registration pattern
 - [x] Globe: WebGL 3D globe with drag-to-rotate and inertia
 - [x] Confetti: presets, emoji bursts, ref-based API, standalone fire functions
+- [x] Backgrounds: `DotPattern`, `GridPattern`, `GradientBackground` — SVG tile patterns + ambient gradient blob
 - [x] Playground: routing, sidebar search, dark mode, per-component docs pages
 - [x] Documentation page (`/docs`) with install guide, setup steps, and component catalogue
+- [x] TypeScript: fixed `TabsProps.onChange` conflict with native `FormEventHandler`, union-type narrowing in NavbarPage
 
 **v0.2 — DX & accessibility**
 
