@@ -13,11 +13,13 @@ const STORAGE_KEY = 'kv-theme';
 const DEFAULT_THEME: ThemeName = 'glass-indigo';
 
 function applyTheme(name: ThemeName): void {
-  const found = themes.find(t => t.name === name) ?? themes[0];
   const root = document.documentElement;
-  (Object.entries(found.colors) as [string, string][]).forEach(([level, value]) => {
-    root.style.setProperty(`--kv-p-${level}`, value);
+  // Remove any stale inline CSS-variable overrides (legacy from older setProperty approach).
+  // Inline styles outrank [data-theme] selectors, so they must be cleared first.
+  ['50', '100', '200', '300', '400', '500', '600', '700'].forEach(level => {
+    root.style.removeProperty(`--kv-p-${level}`);
   });
+  root.setAttribute('data-theme', name);
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
