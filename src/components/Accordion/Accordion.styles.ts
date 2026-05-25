@@ -12,7 +12,7 @@ export const triggerBase =
   'bg-transparent hover:bg-white/50 dark:hover:bg-white/5 ' +
   'transition-colors duration-150 select-none ' +
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset ' +
-  'focus-visible:ring-indigo-300 dark:focus-visible:ring-indigo-500/40 ' +
+  'focus-visible:ring-kv-300 dark:focus-visible:ring-kv-500/40 ' +
   'disabled:cursor-not-allowed disabled:opacity-40';
 
 export const contentOuter =

@@ -5,5 +5,6 @@ export * from './components';
 export * from './utils/cn';
 
 // Theme
-export type { ThemeConfig, ThemeVariant, ThemeRadius, ThemeBlur } from './theme';
+export { ThemeProvider, useTheme, themes, kvTailwindPreset } from './theme';
+export type { Theme, ThemeName, ThemeConfig, ThemeVariant, ThemeRadius, ThemeBlur } from './theme';
 export { defaultTheme } from './theme';

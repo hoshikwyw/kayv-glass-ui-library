@@ -8,8 +8,8 @@ export const triggerBase =
   'shadow-sm shadow-slate-100/50 dark:shadow-black/10 ' +
   'transition-all duration-150 ' +
   'focus:outline-none focus:ring-2 ' +
-  'focus:ring-indigo-300/70 dark:focus:ring-indigo-500/40 ' +
-  'focus:border-indigo-300/60 dark:focus:border-indigo-500/40 ' +
+  'focus:ring-kv-300/70 dark:focus:ring-kv-500/40 ' +
+  'focus:border-kv-300/60 dark:focus:border-kv-500/40 ' +
   'focus:bg-white/80 dark:focus:bg-slate-800/80 ' +
   'disabled:pointer-events-none disabled:opacity-40 ' +
   'select-none';
@@ -46,10 +46,10 @@ export const optionBase =
   'transition-colors duration-75';
 
 export const optionFocusedStyles =
-  'bg-indigo-50/80 dark:bg-indigo-500/15 text-slate-900 dark:text-white';
+  'bg-kv-50/80 dark:bg-kv-500/15 text-slate-900 dark:text-white';
 
 export const optionSelectedStyles =
-  'font-medium text-indigo-600 dark:text-indigo-300';
+  'font-medium text-kv-600 dark:text-kv-300';
 
 export const optionDisabledStyles =
   'opacity-40 cursor-not-allowed';

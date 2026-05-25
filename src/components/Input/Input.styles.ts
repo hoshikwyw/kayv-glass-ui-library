@@ -9,8 +9,8 @@ export const inputBase =
   'shadow-sm shadow-slate-100/50 dark:shadow-black/10 ' +
   'transition-all duration-150 ' +
   'focus:outline-none focus:ring-2 ' +
-  'focus:ring-indigo-300/70 dark:focus:ring-indigo-500/40 ' +
-  'focus:border-indigo-300/60 dark:focus:border-indigo-500/40 ' +
+  'focus:ring-kv-300/70 dark:focus:ring-kv-500/40 ' +
+  'focus:border-kv-300/60 dark:focus:border-kv-500/40 ' +
   'focus:bg-white/80 dark:focus:bg-slate-800/80 ' +
   'read-only:bg-slate-50/60 dark:read-only:bg-slate-800/30 ' +
   'disabled:pointer-events-none disabled:opacity-40 ' +

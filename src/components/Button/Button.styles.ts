@@ -15,10 +15,10 @@ export const variantStyles: Record<ButtonVariant, string> = {
     'shadow-sm shadow-slate-200 ' +
     'focus-visible:ring-slate-300 focus-visible:ring-offset-slate-50',
   secondary:
-    'bg-blue-500/10 text-blue-600 ' +
-    'border border-blue-200/60 ' +
-    'hover:bg-blue-500/15 active:bg-blue-500/25 ' +
-    'focus-visible:ring-blue-300 focus-visible:ring-offset-slate-50',
+    'bg-kv-500/10 text-kv-600 ' +
+    'border border-kv-200/60 ' +
+    'hover:bg-kv-500/15 active:bg-kv-500/25 ' +
+    'focus-visible:ring-kv-300 focus-visible:ring-offset-slate-50',
   ghost:
     'bg-transparent text-slate-600 ' +
     'border border-transparent ' +

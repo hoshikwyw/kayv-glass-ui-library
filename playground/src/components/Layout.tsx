@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Search, ExternalLink, Sun, Moon } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Search, ExternalLink, Sun, Moon, Palette } from 'lucide-react';
 import { NavLink, Outlet, Link } from 'react-router-dom';
+import { useTheme } from 'kayv-glass-ui';
 
 function AppIcon({ className }: { className?: string }) {
   return (
@@ -112,6 +113,9 @@ const navigation: NavSection[] = [
 
 export default function Layout() {
   const [search, setSearch] = useState('');
+  const [showThemePicker, setShowThemePicker] = useState(false);
+  const themePickerRef = useRef<HTMLDivElement>(null);
+  const { theme, setTheme, themes } = useTheme();
 
   const [isDark, setIsDark] = useState(() => {
     const stored = localStorage.getItem('theme');
@@ -130,6 +134,17 @@ export default function Layout() {
     }
   }, [isDark]);
 
+  useEffect(() => {
+    if (!showThemePicker) return;
+    function handleClick(e: MouseEvent) {
+      if (themePickerRef.current && !themePickerRef.current.contains(e.target as Node)) {
+        setShowThemePicker(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showThemePicker]);
+
   const filteredNav = search.trim()
     ? navigation
         .map(s => ({
@@ -146,7 +161,7 @@ export default function Layout() {
       {/* ── Ambient background blobs ─────────────────────────────────────────── */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-24 w-[560px] h-[560px] rounded-full
-          bg-indigo-200/40 dark:bg-indigo-500/15 blur-3xl" />
+          bg-kv-200/40 dark:bg-kv-500/15 blur-3xl" />
         <div className="absolute top-1/2 -translate-y-1/2 -left-32 w-[480px] h-[480px]
           rounded-full bg-sky-200/30 dark:bg-sky-500/10 blur-3xl" />
         <div className="absolute -bottom-40 right-1/3 w-[420px] h-[420px] rounded-full
@@ -168,9 +183,9 @@ export default function Layout() {
               <span className="font-normal text-slate-400 dark:text-slate-500">-glass-ui</span>
             </span>
             <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full
-              bg-indigo-50 text-indigo-600 border border-indigo-200/60
-              dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/30">
-              v0.1.0
+              bg-kv-50 text-kv-600 border border-kv-200/60
+              dark:bg-kv-500/20 dark:text-kv-300 dark:border-kv-500/30">
+              v0.1.1
             </span>
           </Link>
 
@@ -187,15 +202,76 @@ export default function Layout() {
                   border border-slate-200/60 dark:border-white/10
                   text-slate-700 dark:text-slate-300
                   placeholder:text-slate-400 dark:placeholder:text-slate-600
-                  focus:outline-none focus:border-indigo-300 dark:focus:border-indigo-500/40
+                  focus:outline-none focus:border-kv-300 dark:focus:border-kv-500/40
                   focus:bg-white/80 dark:focus:bg-white/10
                   transition-colors"
               />
             </div>
           </div>
 
-          <div className="ml-auto flex items-center gap-2">
-            {/* Theme toggle */}
+          <div className="ml-auto flex items-center gap-1">
+            {/* Theme picker */}
+            <div className="relative" ref={themePickerRef}>
+              <button
+                onClick={() => setShowThemePicker(v => !v)}
+                aria-label="Change theme"
+                className="p-1.5 rounded-lg
+                  text-slate-400 dark:text-slate-500
+                  hover:text-slate-700 dark:hover:text-slate-300
+                  hover:bg-slate-100/60 dark:hover:bg-white/5
+                  transition-colors"
+              >
+                <Palette className="h-4 w-4" />
+              </button>
+
+              {showThemePicker && (
+                <div className="absolute right-0 top-full mt-2 z-50
+                  p-3 rounded-2xl w-52
+                  bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl
+                  border border-white/60 dark:border-white/10
+                  shadow-xl shadow-slate-200/60 dark:shadow-black/40">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest
+                    text-slate-400 dark:text-slate-500 mb-2 px-0.5">
+                    Theme
+                  </p>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {themes.map(t => (
+                      <button
+                        key={t.name}
+                        onClick={() => { setTheme(t.name); setShowThemePicker(false); }}
+                        className={`flex flex-col items-center gap-1.5 p-2 rounded-xl
+                          text-[10px] font-medium transition-colors
+                          ${theme === t.name
+                            ? 'bg-slate-100/80 dark:bg-white/10 text-slate-900 dark:text-white'
+                            : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5'
+                          }`}
+                      >
+                        <span
+                          className={`h-6 w-6 rounded-full shadow-sm transition-transform
+                            ${theme === t.name ? 'scale-110 ring-2 ring-offset-2 ring-offset-white dark:ring-offset-slate-800' : ''}`}
+                          style={{ backgroundColor: t.primary }}
+                        />
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="mt-2 pt-2 border-t border-slate-100 dark:border-white/8">
+                    <Link
+                      to="/theming"
+                      onClick={() => setShowThemePicker(false)}
+                      className="flex items-center justify-center gap-1.5 py-1.5 text-[10px]
+                        font-semibold uppercase tracking-widest
+                        text-kv-600 dark:text-kv-400 hover:text-kv-700 dark:hover:text-kv-300
+                        transition-colors"
+                    >
+                      View theming docs
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Dark mode toggle */}
             <button
               onClick={() => setIsDark(d => !d)}
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -211,7 +287,7 @@ export default function Layout() {
             </button>
 
             <a
-              href="https://github.com"
+              href="https://github.com/hoshikwyw/kayv-glass-ui-library"
               target="_blank"
               rel="noreferrer"
               aria-label="GitHub"
@@ -262,7 +338,7 @@ export default function Layout() {
                             className={({ isActive }) =>
                               `flex items-center px-3 py-1.5 rounded-lg text-sm transition-colors ${
                                 isActive
-                                  ? 'bg-indigo-50/80 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 font-medium border border-indigo-100 dark:border-indigo-500/20'
+                                  ? 'bg-kv-50/80 dark:bg-kv-500/15 text-kv-600 dark:text-kv-300 font-medium border border-kv-100 dark:border-kv-500/20'
                                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-white/60 dark:hover:bg-white/5'
                               }`
                             }

@@ -31,7 +31,7 @@ export const closeButtonBase =
   'hover:text-slate-700 dark:hover:text-slate-300 ' +
   'hover:bg-slate-100/80 dark:hover:bg-white/8 ' +
   'transition-colors focus:outline-none focus:ring-2 ' +
-  'focus:ring-indigo-300/70 dark:focus:ring-indigo-500/40';
+  'focus:ring-kv-300/70 dark:focus:ring-kv-500/40';
 
 export const bodyBase =
   'px-6 py-5 flex-1 overflow-y-auto ' +

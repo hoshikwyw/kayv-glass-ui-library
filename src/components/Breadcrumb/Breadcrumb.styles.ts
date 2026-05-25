@@ -6,7 +6,7 @@ export const linkBase =
   'hover:text-slate-900 dark:hover:text-slate-100 ' +
   'hover:bg-slate-100/70 dark:hover:bg-white/8 ' +
   'transition-colors duration-100 focus:outline-none ' +
-  'focus-visible:ring-2 focus-visible:ring-indigo-300/70 dark:focus-visible:ring-indigo-500/40';
+  'focus-visible:ring-2 focus-visible:ring-kv-300/70 dark:focus-visible:ring-kv-500/40';
 
 export const currentBase =
   'flex items-center gap-1.5 px-1.5 py-0.5 text-sm font-medium ' +

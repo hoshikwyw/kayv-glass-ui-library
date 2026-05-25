@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Default theme tokens (glass-indigo) ───────────────────────────────────── */
+:root {
+  --kv-p-50:  238 242 255;
+  --kv-p-100: 224 231 255;
+  --kv-p-200: 199 210 254;
+  --kv-p-300: 165 180 252;
+  --kv-p-400: 129 140 248;
+  --kv-p-500: 99 102 241;
+  --kv-p-600: 79 70 229;
+  --kv-p-700: 67 56 202;
+}
+
 @layer base {
   html,
   body,
@@ -13,7 +25,6 @@
     background-color: rgb(248 250 252); /* slate-50 */
   }
 
-  /* Applied when Layout adds the 'dark' class to <html> */
   .dark body {
     background-color: rgb(2 6 23); /* slate-950 */
   }

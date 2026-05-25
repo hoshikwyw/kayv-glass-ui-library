@@ -10,9 +10,9 @@ export const variantStyles: Record<BadgeVariant, string> = {
     'text-slate-600 dark:text-slate-300 ' +
     'border-slate-200/60 dark:border-slate-600/40',
   primary:
-    'bg-indigo-50 dark:bg-indigo-500/15 ' +
-    'text-indigo-600 dark:text-indigo-300 ' +
-    'border-indigo-200/60 dark:border-indigo-500/25',
+    'bg-kv-50 dark:bg-kv-500/15 ' +
+    'text-kv-600 dark:text-kv-300 ' +
+    'border-kv-200/60 dark:border-kv-500/25',
   success:
     'bg-emerald-50 dark:bg-emerald-500/15 ' +
     'text-emerald-600 dark:text-emerald-300 ' +
@@ -39,7 +39,7 @@ export const sizeStyles: Record<BadgeSize, string> = {
 
 export const dotColorStyles: Record<BadgeVariant, string> = {
   default: 'bg-slate-400 dark:bg-slate-400',
-  primary: 'bg-indigo-500 dark:bg-indigo-400',
+  primary: 'bg-kv-500 dark:bg-kv-400',
   success: 'bg-emerald-500 dark:bg-emerald-400',
   warning: 'bg-amber-500 dark:bg-amber-400',
   danger: 'bg-rose-500 dark:bg-rose-400',

@@ -9,11 +9,11 @@ export const dropzoneBase =
   'bg-white/40 dark:bg-slate-800/30 backdrop-blur-sm ' +
   'text-center cursor-pointer select-none ' +
   'transition-all duration-150 ' +
-  'hover:border-indigo-300/80 dark:hover:border-indigo-500/50 ' +
-  'hover:bg-indigo-50/30 dark:hover:bg-indigo-500/5 ' +
+  'hover:border-kv-300/80 dark:hover:border-kv-500/50 ' +
+  'hover:bg-kv-50/30 dark:hover:bg-kv-500/5 ' +
   'focus-visible:outline-none focus-visible:ring-2 ' +
-  'focus-visible:ring-indigo-300/70 dark:focus-visible:ring-indigo-500/40 ' +
-  'focus-visible:border-indigo-300/60 dark:focus-visible:border-indigo-500/40';
+  'focus-visible:ring-kv-300/70 dark:focus-visible:ring-kv-500/40 ' +
+  'focus-visible:border-kv-300/60 dark:focus-visible:border-kv-500/40';
 
 export const dropzoneSizeStyles: Record<FileInputSize, string> = {
   sm: 'px-4 py-6',
@@ -22,8 +22,8 @@ export const dropzoneSizeStyles: Record<FileInputSize, string> = {
 };
 
 export const dropzoneDragStyles =
-  'border-indigo-400 dark:border-indigo-500/70 ' +
-  'bg-indigo-50/50 dark:bg-indigo-500/8 scale-[1.015]';
+  'border-kv-400 dark:border-kv-500/70 ' +
+  'bg-kv-50/50 dark:bg-kv-500/8 scale-[1.015]';
 
 export const dropzoneErrorStyles =
   'border-rose-300/80 dark:border-rose-500/50 ' +
@@ -39,7 +39,7 @@ export const dropzoneTitleBase =
 export const dropzoneHintBase = 'text-xs text-slate-400 dark:text-slate-500';
 
 export const browseSpanBase =
-  'text-indigo-600 dark:text-indigo-400 font-medium underline-offset-2 hover:underline';
+  'text-kv-600 dark:text-kv-400 font-medium underline-offset-2 hover:underline';
 
 export const fileListBase = 'flex flex-col gap-1.5';
 
@@ -82,7 +82,7 @@ export const buttonVariantTriggerBase =
   'hover:shadow-md hover:border-slate-200/80 dark:hover:border-white/15 ' +
   'transition-all duration-150 cursor-pointer select-none ' +
   'focus:outline-none focus-visible:ring-2 ' +
-  'focus-visible:ring-indigo-300/70 dark:focus-visible:ring-indigo-500/40';
+  'focus-visible:ring-kv-300/70 dark:focus-visible:ring-kv-500/40';
 
 export const buttonVariantTriggerSizeStyles: Record<import('./FileInput.types').FileInputSize, string> = {
   sm: 'px-2.5 py-1 text-xs',
