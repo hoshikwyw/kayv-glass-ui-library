@@ -1,6 +1,6 @@
 {
   "name": "@kwyw/kayv-glass-ui",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Production-grade React + TypeScript glass-morphism component library",
   "author": "kayv",
   "license": "MIT",
@@ -24,6 +24,9 @@
     "dist"
   ],
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "react",
     "components",

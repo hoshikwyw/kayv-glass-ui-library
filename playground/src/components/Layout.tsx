@@ -290,7 +290,7 @@ export default function Layout() {
             <span className="hidden sm:inline-flex text-[10px] font-semibold px-1.5 py-0.5 rounded-full
               bg-kv-50 text-kv-600 border border-kv-200/60
               dark:bg-kv-500/20 dark:text-kv-300 dark:border-kv-500/30">
-              v0.1.1
+              v0.2.0
             </span>
           </Link>
 

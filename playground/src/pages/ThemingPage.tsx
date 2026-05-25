@@ -102,7 +102,7 @@ export default function ThemingPage() {
           <span className="text-xs font-semibold px-2 py-0.5 rounded-full
             bg-kv-50 text-kv-600 border border-kv-200/60
             dark:bg-kv-500/20 dark:text-kv-300 dark:border-kv-500/30">
-            v0.1.1
+            v0.2.0
           </span>
         </div>
         <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
